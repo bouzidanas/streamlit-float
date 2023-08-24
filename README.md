@@ -1,4 +1,5 @@
-streamlit-float  [![Version](https://img.shields.io/pypi/v/streamlit-float)](https://pypi.org/project/streamlit-float/#history) [![Downloads](https://img.shields.io/pypi/dm/streamlit-float)](https://pypi.org/project/streamlit-float/#files)
+streamlit-float  [![Version](https://img.shields.io/pypi/v/streamlit-float)](https://pypi.org/project/streamlit-float/#history) 
+[![PyPi - Downloads](https://img.shields.io/pypi/dm/streamlit-float)](https://pypi.org/project/streamlit-float/#files)
 ============
 
 Fix the vertical position of Streamlit containers relative to viewport instead of page
@@ -58,19 +59,12 @@ with col2:
 
 ```
 
-Note that the float feature does not work well with `expander` and `tabs` containers.
+Note that the float feature does not work well with `expander` and `tabs` containers. Also, it is recommended to call the float methods on a container after all the content has been added to it.
 
 If instead you would like to float/fix a container that is constructed in html markup and added using Streamlits `markdown` method (with `unsafe_allow_html=True`), make sure to add 'floating' to the containers classlist.
 
 ```python
-st.markdown(
-        '''
-            <div class="floating">
-                ...content...
-            </div>
-        ''', 
-        unsafe_allow_html=True
-        )
+st.markdown('''<div class="floating">..content..</div>''', unsafe_allow_html=True)
 ```
 
 ## License
