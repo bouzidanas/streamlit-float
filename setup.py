@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='streamlit-float',
-    version='0.2.4',
+    version='0.2.5',
     author='Anas Bouzid',
     author_email='anasbouzid@gmail.com',
     description='Fix Streamlit containers relative to viewport instead of page',
