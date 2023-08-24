@@ -1,0 +1,10 @@
+LICENSE.txt
+README.md
+setup.py
+streamlit_float/__init__.py
+streamlit_float/test.py
+streamlit_float.egg-info/PKG-INFO
+streamlit_float.egg-info/SOURCES.txt
+streamlit_float.egg-info/dependency_links.txt
+streamlit_float.egg-info/requires.txt
+streamlit_float.egg-info/top_level.txt
