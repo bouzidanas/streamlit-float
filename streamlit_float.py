@@ -1,5 +1,6 @@
 import streamlit as st
 
+# add css to streamlit app
 html_style = '''
 <style>
 div:has( >.element-container div.float) {
@@ -19,6 +20,13 @@ div.floating {
 '''
 st.markdown(html_style, unsafe_allow_html=True)
 
-def float(container):
-    with container:
-        st.markdown('<div class="float"></div>', unsafe_allow_html=True)
+# adds empty div to parent in order to target it with css
+def float_parent():
+    st.markdown('<div class="float"></div>', unsafe_allow_html=True)
+
+# float container via its delta generator 
+def float(self):
+    self.markdown('<div class="float"></div>', unsafe_allow_html=True)
+
+# add float method to st.delta_generator.DeltaGenerator class so it can be directly called
+st.delta_generator.DeltaGenerator.float = float
