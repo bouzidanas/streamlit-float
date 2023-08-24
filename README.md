@@ -60,7 +60,7 @@ with col2:
 
 Note that the float feature does not work well with `expander` and `tabs` containers.
 
-If instead you would like to float/fix a container that is constructed in html markup and added using Streamlits `markdown` method (with `unsafe_allow_html=True`), make sure to add 'floating' to the containers classlist 
+If instead you would like to float/fix a container that is constructed in html markup and added using Streamlits `markdown` method (with `unsafe_allow_html=True`), make sure to add 'floating' to the containers classlist.
 
 ```python
 st.markdown(
