@@ -8,14 +8,17 @@ def float_init():
         display: flex;
         flex-direction: column;
         position: fixed;
+        z-index: 99;
     }
     div.float {
         height:0%;
+        z-index: 99;
     }
     div.floating {
         display: flex;
         flex-direction: column;
         position: fixed;
+        z-index: 99; 
     }
     </style>
     '''
