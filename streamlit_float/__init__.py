@@ -12,7 +12,6 @@ def float_init():
     }
     div.float {
         height:0%;
-        z-index: 99;
     }
     div.floating {
         display: flex;
