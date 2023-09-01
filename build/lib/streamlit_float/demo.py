@@ -1,10 +1,6 @@
 import streamlit as st
 from __init__ import *
 
-st.set_page_config(
-    page_title='streamlit-float demo',
-)
-
 float_init()
 
 if "show" not in st.session_state:

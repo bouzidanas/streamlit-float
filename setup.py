@@ -1,13 +1,17 @@
 from setuptools import setup, find_packages
+from pathlib import Path
+
+this_directory = Path(__file__).parent
+long_description = (this_directory / "PROJECT.md").read_text()
 
 setup(
     name='streamlit-float',
-    version='0.2.5',
+    version='0.2.6',
     author='Anas Bouzid',
     author_email='anasbouzid@gmail.com',
     description='Fix Streamlit containers relative to viewport instead of page',
-    long_description="A simple module for fixing the vertical position of Streamlit containers relative to viewport instead of page",
-    long_description_content_type="text/plain",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url="https://github.com/bouzidanas/streamlit-float",
     packages=find_packages(),
     include_package_data=True,

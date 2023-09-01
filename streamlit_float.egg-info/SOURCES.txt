@@ -2,6 +2,7 @@ LICENSE.txt
 README.md
 setup.py
 streamlit_float/__init__.py
+streamlit_float/demo.py
 streamlit_float/test.py
 streamlit_float.egg-info/PKG-INFO
 streamlit_float.egg-info/SOURCES.txt
