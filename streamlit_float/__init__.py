@@ -73,6 +73,7 @@ def float(self, css=None):
     else:
         self.markdown('<div class="float"></div>', unsafe_allow_html=True)
 
+# create a floating box containing markdown content
 def float_box(markdown, width="300px", height="300px", top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, css=None):
     jct_css = "width: " + width + "; height: " + height + ";border-radius: 0.5rem;padding: 1rem;padding-left: 1.3rem;padding-right: 1.3rem;"
     if shadow is not None and type(shadow) is int and shadow < len(shadow_list) and shadow >= 0:
@@ -96,6 +97,31 @@ def float_box(markdown, width="300px", height="300px", top=None, left=None, righ
     new_css = '<style>\ndiv.flt-' + new_id + ' {' + jct_css + '}\n</style>'
     st.markdown(new_css, unsafe_allow_html=True)
     st.markdown('<div class="floating flt-' + new_id + '">' + markdown + '</div>', unsafe_allow_html=True)
+
+# helper function to create css string
+def float_css_helper(width=None, height=None, top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, css=None):
+    jct_css = ""
+    if width is not None:
+        jct_css += "width: " + width + ";"
+    if height is not None:
+        jct_css += "height: " + height + ";"
+    if shadow is not None and type(shadow) is int and shadow < len(shadow_list) and shadow >= 0:
+        jct_css += shadow_list[int(shadow)]
+    if border is not None:
+        jct_css += "border: " + border + ";"
+    if background is not None:
+        jct_css += "background-color: " + background + ";"
+    if top is not None:
+        jct_css += "top: " + top + ";"
+    if left is not None:
+        jct_css += "left: " + left + ";"
+    if right is not None:
+        jct_css += "right: " + right + ";"
+    if bottom is not None:
+        jct_css += "bottom: " + bottom + ";"
+    if css is not None:
+        jct_css += css
+    return jct_css
 
 # add float method to st.delta_generator.DeltaGenerator class so it can be directly called
 st.delta_generator.DeltaGenerator.float = float
