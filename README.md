@@ -166,7 +166,7 @@ float_box('<iframe width="100%" height="100%" src="https://www.youtube.com/embed
 ```
  #### Demo: [![Component Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://float-demo.streamlit.app/)
 
-![streamlit-float-demo4|690x459](upload://sLiEtLe9SQxuKyk5FDFOYjZDXl5.gif)
+![streamlit-float-demo4](https://github.com/bouzidanas/streamlit-float/assets/25779130/2ddf3926-2cc4-4628-a35f-a5e25cb319b1)
 
 ## License
 This project is licensed under the [MIT License](LICENSE.txt)
