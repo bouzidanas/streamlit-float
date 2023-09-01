@@ -79,13 +79,15 @@ with button_container:
             st.session_state.show = True
             st.experimental_rerun()
     
-
+# Alter CSS based on expand/collapse state
 if st.session_state.show:
     vid_y_pos = "2rem"
-    button_css = float_css_helper(width="2.2rem", right="2rem", bottom="21rem", transition=0)
+    button_b_pos = "21rem"
 else:
     vid_y_pos = "-19.5rem"
-    button_css = float_css_helper(width="2.2rem", right="2rem", bottom="1rem", transition=0)
+    button_b_pos = "1rem"
+
+button_css = float_css_helper(width="2.2rem", right="2rem", bottom=button_b_pos, transition=0)
 
 button_container.float(button_css)
-float_box('<iframe width="100%" height="100%" src="https://www.youtube.com/embed/J8TgKxomS2g?si=Ir_bq_E5e9jHAEFw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',width="29rem", right="2rem", bottom=vid_y_pos, css="padding: 0;transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0, 1, 0.5, 1);", shadow=12)
+float_box('<iframe width="100%" height="100%" src="https://www.youtube.com/embed/J8TgKxomS2g?si=Ir_bq_E5e9jHAEFw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',width="29rem", right="2rem", bottom=vid_y_pos, transition=0, shadow=12, css="padding: 0;")
