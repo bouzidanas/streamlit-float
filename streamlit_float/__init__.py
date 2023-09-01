@@ -31,6 +31,8 @@ shadow_list = ["box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;",
                "box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;"
                ]
 
+transition_list = ["transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0, 1, 0.5, 1);"]
+
 def float_init():
 # add css to streamlit app
     html_style = '''
@@ -75,10 +77,16 @@ def float(self, css=None):
         self.markdown('<div class="float"></div>', unsafe_allow_html=True)
 
 # create a floating box containing markdown content
-def float_box(markdown, width="300px", height="300px", top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, css=None):
+def float_box(markdown, width="300px", height="300px", top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, css=None):
     jct_css = "width: " + width + "; height: " + height + ";border-radius: 0.5rem;padding: 1rem;padding-left: 1.3rem;padding-right: 1.3rem;"
     if shadow is not None and type(shadow) is int and shadow < len(shadow_list) and shadow >= 0:
         jct_css += shadow_list[int(shadow)]
+    elif type(shadow) is str:
+        jct_css += shadow
+    if transition is not None and type(transition) is int and transition < len(transition_list) and transition >= 0:
+        jct_css += transition_list[int(transition)]
+    elif type(transition) is str:
+        jct_css += transition
     if border is not None:
         jct_css += "border: " + border + ";"
     if background is not None:
@@ -100,7 +108,7 @@ def float_box(markdown, width="300px", height="300px", top=None, left=None, righ
     st.markdown('<div class="floating flt-' + new_id + '">' + markdown + '</div>', unsafe_allow_html=True)
 
 # helper function to create css string
-def float_css_helper(width=None, height=None, top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, css=None):
+def float_css_helper(width=None, height=None, top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, css=None):
     jct_css = ""
     if width is not None:
         jct_css += "width: " + width + ";"
@@ -108,6 +116,12 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
         jct_css += "height: " + height + ";"
     if shadow is not None and type(shadow) is int and shadow < len(shadow_list) and shadow >= 0:
         jct_css += shadow_list[int(shadow)]
+    elif type(shadow) is str:
+        jct_css += shadow
+    if transition is not None and type(transition) is int and transition < len(transition_list) and transition >= 0:
+        jct_css += transition_list[int(transition)]
+    elif type(transition) is str:
+        jct_css += transition
     if border is not None:
         jct_css += "border: " + border + ";"
     if background is not None:
