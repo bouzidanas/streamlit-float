@@ -18,6 +18,6 @@ with col2:
     cont.float("top: 4rem;left: 6rem")
 
 with col3:
-    st.write("Tomorrow's news")
+    st.write("Tomorrow's news &copy;")
 
     float_box("This is a floating box", left="2px", background="black", border="1px solid rgba(250, 250, 250, 0.2)")
