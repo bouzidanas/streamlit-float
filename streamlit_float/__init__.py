@@ -144,7 +144,6 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
 # Create a floating dialog container 
 # This needs to be fleshed out more. Add more options for positions, transitions, etc.
 def float_dialog(show=False, width=2, background="slategray", transition=2, css=""):
-
     float_col_a, float_col_b = st.columns([width, 1])
 
     with float_col_a:    
