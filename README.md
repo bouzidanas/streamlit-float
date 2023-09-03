@@ -119,7 +119,7 @@ css = float_css_helper(bottom="0", background=bg_color)
 footer_container.float(css)
 ```
 
-### New Float Box container
+### NEW Float Box container
 
 The newly added `float_box` function takes the markdown you provide it and puts it in a newly created floating `div` container. This function also provides direct access (via its arguments) to several CSS parameters/attributes allowing you to easily adjust size, position, background, and border as well as add box-shadows and transitions.
 
