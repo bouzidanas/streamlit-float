@@ -204,6 +204,8 @@ with dialog_container:
         st.experimental_rerun()
 ```
 
+![streamlit-float-demo5](https://github.com/bouzidanas/streamlit-float/assets/25779130/a8cdc662-03dc-42c9-8c68-804fa64b6a29)
+
  #### Demo: [![Component Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://float-demo.streamlit.app/)
 
 ## License
