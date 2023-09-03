@@ -102,7 +102,7 @@ if st.button("Contact us"):
         st.experimental_rerun()
 
 # Create Float Dialog container
-dialog_container = float_dialog(st.session_state.dialog, background="white")
+dialog_container = float_dialog(st.session_state.dialog)
 
 # Add contents of Dialog including button to close it
 with dialog_container:
