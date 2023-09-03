@@ -128,8 +128,10 @@ Example:
 import streamlit as st
 from streamlit_float import *
 
+# Float feature initialization
 float_init()
 
+# Initialize session variable that will show/hide Float Box
 if "show" not in st.session_state:
     st.session_state.show = True
 
@@ -164,9 +166,45 @@ button_container.float(button_css)
 # Add Float Box with embedded Youtube video
 float_box('<iframe width="100%" height="100%" src="https://www.youtube.com/embed/J8TgKxomS2g?si=Ir_bq_E5e9jHAEFw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',width="29rem", right="2rem", bottom=vid_y_pos, css="padding: 0;transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0, 1, 0.5, 1);", shadow=12)
 ```
- #### Demo: [![Component Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://float-demo.streamlit.app/)
-
 ![streamlit-float-demo4](https://github.com/bouzidanas/streamlit-float/assets/25779130/2ddf3926-2cc4-4628-a35f-a5e25cb319b1)
+
+### NEW Float Dialog container
+
+The `float_dialog` function creates a streamlit container that is manipulated to have the appearance and behavior of a simple dialog box. This function takes a boolean which shows or hides the dialog box.
+
+Example:
+```python
+import streamlit as st
+from streamlit_float import *
+
+# Float feature initialization
+float_init()
+
+# Initialize session variable that will open/close dialog
+if "show" not in st.session_state:
+    st.session_state.show = False
+
+# Button that opens the dialog
+if st.button("Contact us"):
+        st.session_state.show = True
+        st.experimental_rerun()
+
+# Create Float Dialog container
+dialog_container = float_dialog(st.session_state.show)
+
+# Add contents of Dialog including button to close it
+with dialog_container:
+    st.header("Contact us")
+    name_input = st.text_input("Enter your name", key="name")
+    email_input = st.text_input("Enter your email", key="email")
+    message = st.text_area("Enter your message", key="message")
+    if st.button("Send", key="send"):
+        # ...Handle input data here...
+        st.session_state.show = False
+        st.experimental_rerun()
+```
+
+ #### Demo: [![Component Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://float-demo.streamlit.app/)
 
 ## License
 This project is licensed under the [MIT License](LICENSE.txt)

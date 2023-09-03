@@ -31,7 +31,7 @@ shadow_list = ["box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;",
                "box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;"
                ]
 
-transition_list = ["transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0, 1, 0.5, 1);"]
+transition_list = ["transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0, 1, 0.5, 1);", "transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0.15, 0.45, 0.85, 0.55);", "transition-property: all;transition-duration: .6s;transition-timing-function: ease-in-out;"]
 
 def float_init():
 # add css to streamlit app
@@ -75,6 +75,9 @@ def float(self, css=None):
         self.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
     else:
         self.markdown('<div class="float"></div>', unsafe_allow_html=True)
+
+# add float method to st.delta_generator.DeltaGenerator class so it can be directly called
+st.delta_generator.DeltaGenerator.float = float
 
 # create a floating box containing markdown content
 def float_box(markdown, width="300px", height="300px", top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, css=None):
@@ -138,5 +141,27 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
         jct_css += css
     return jct_css
 
-# add float method to st.delta_generator.DeltaGenerator class so it can be directly called
-st.delta_generator.DeltaGenerator.float = float
+# Create a floating dialog container 
+# This needs to be fleshed out more. Add more options for positions, transitions, etc.
+def float_dialog(show=False, width=2, transition=2, css=""):
+
+    float_col_a, float_col_b = st.columns([width, 1])
+
+    with float_col_a:    
+        dialog_container = st.container()
+
+    if show:
+        pos_css = "top: 2.3rem;"
+    else:
+        pos_css = "top: -100%;"
+
+    if transition is not None and type(transition) is int and transition < len(transition_list) and transition >= 0:
+        tran_css = transition_list[int(transition)]
+    elif type(transition) is str:
+        tran_css = transition
+    else:
+        tran_css = ""
+
+    float_col_b.float(float_css_helper(width="100%", height="100%", left="0", top="0", background="rgba(0, 0, 0, 0.4)", css="z-index: 999000;" + pos_css))
+    float_col_a.float(pos_css + "padding: 2rem;padding-bottom: 0.9rem;border-radius: 0.5rem;left: 50%;transform: translateX(-50%);background-color: slategray;z-index: 999900;" + tran_css + css + "transition-property: top;")
+    return dialog_container

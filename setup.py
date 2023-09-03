@@ -6,7 +6,7 @@ long_description = (this_directory / "PROJECT.md").read_text()
 
 setup(
     name='streamlit-float',
-    version='0.2.6',
+    version='0.2.7',
     author='Anas Bouzid',
     author_email='anasbouzid@gmail.com',
     description='Fix Streamlit containers relative to viewport instead of page',

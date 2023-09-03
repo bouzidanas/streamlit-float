@@ -3,10 +3,40 @@ from __init__ import *
 
 float_init()
 
+# cola, colb = st.columns([2, 1])
+
+# with cola:    
+#     dialog_container = st.container()
+#     with dialog_container:
+#         st.text_input("Enter your name", key="name")
+#         st.text_area("Enter your message", key="message")
+#         if st.button("Send", key="send"):
+#             st.experimental_rerun()
+
+# float_box("", width="100%", height="100%", left="0", top="0", background="rgba(0, 0, 0, 0.5)", css="z-index: 999000;")
+# cola.float("padding: 2rem;left: 50%;top: 2.8rem;transform: translateX(-50%);;background-color: slategray;z-index: 999900;")
+
+if "dialog" not in st.session_state:
+    st.session_state.dialog = True
+
+dialog = float_dialog(st.session_state.dialog, width=3)
+
+with dialog:
+    st.header("Contact us")
+    name_input = st.text_input("Enter your name", key="name")
+    email_input = st.text_input("Enter your email", key="email")
+    message = st.text_area("Enter your message", key="message")
+    if st.button("Send", key="send"):
+        st.session_state.dialog = False
+        st.experimental_rerun()
+
 t = 'A faster way to build and share data apps'
 col1, col2, col3 = st.columns([9, 4, 4])
 
 with col1:
+    if st.button("Click me"):
+        st.session_state.dialog = True
+        st.experimental_rerun()
     for i in range(0, 30):
         st.header("Today's news")
         st.write(t)

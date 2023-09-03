@@ -91,3 +91,25 @@ button_css = float_css_helper(width="2.2rem", right="2rem", bottom=button_b_pos,
 
 button_container.float(button_css)
 float_box('<iframe width="100%" height="100%" src="https://www.youtube.com/embed/J8TgKxomS2g?si=Ir_bq_E5e9jHAEFw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',width="29rem", right="2rem", bottom=vid_y_pos, transition=0, shadow=12, css="padding: 0;")
+
+# Initialize session variable that will open/close dialog
+if "dialog" not in st.session_state:
+    st.session_state.dialog = False
+
+# Button that opens the dialog
+if st.button("Contact us"):
+        st.session_state.dialog = True
+        st.experimental_rerun()
+
+# Create Float Dialog container
+dialog_container = float_dialog(st.session_state.dialog)
+
+# Add contents of Dialog including button to close it
+with dialog_container:
+    st.header("Contact us")
+    name_input = st.text_input("Enter your name")
+    email_input = st.text_input("Enter your email")
+    message = st.text_area("Enter your message")
+    if st.button("Send", key="send"):
+        st.session_state.dialog = False
+        st.experimental_rerun()
