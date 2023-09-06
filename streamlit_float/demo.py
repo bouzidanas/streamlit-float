@@ -1,14 +1,16 @@
 import streamlit as st
 from __init__ import *
+import streamlit_antd_components as sac
 
-st.set_page_config(
-    page_title='streamlit-float demo',
-)
+st.set_page_config(page_title='streamlit-float demo')
 
 float_init()
 
 if "show" not in st.session_state:
     st.session_state.show = True
+
+with st.sidebar:
+    st.markdown("streamlit-float demo")
 
 st.image("https://github.com/bouzidanas/streamlit-float/assets/25779130/6543e315-3e42-4f11-b4a5-939853f2a048")
 st.markdown('''# Large Language Models
@@ -113,3 +115,10 @@ with dialog_container:
     if st.button("Send", key="send"):
         st.session_state.dialog = False
         st.experimental_rerun()
+
+banner_container = st.container()
+
+with banner_container:
+    sac.alert(message='**WARNING! This is a demo. This is not a real article.**', description=None, type='warning', height=None, icon=True, closable=True, banner=True)
+
+banner_container.float("top: 0.2rem;z-index: 999992;")
