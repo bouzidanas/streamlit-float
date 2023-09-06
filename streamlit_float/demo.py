@@ -10,6 +10,14 @@ float_init()
 if "show" not in st.session_state:
     st.session_state.show = True
 
+# Function to navigate to a new page
+# An improvement here would be to open in new tab
+def nav_to(url):
+    nav_script = """
+        <meta http-equiv="refresh" content="0; url='%s'">
+    """ % (url)
+    st.write(nav_script, unsafe_allow_html=True)
+
 with st.sidebar:
     st.markdown("# streamlit-float")
 
@@ -101,8 +109,8 @@ if "dialog" not in st.session_state:
 
 # Button that opens the dialog
 if st.button("Contact us"):
-        st.session_state.dialog = True
-        st.experimental_rerun()
+    st.session_state.dialog = True
+    st.experimental_rerun()
 
 # Create Float Dialog container
 dialog_container = float_dialog(st.session_state.dialog)
@@ -117,18 +125,39 @@ with dialog_container:
         st.session_state.dialog = False
         st.experimental_rerun()
 
+# Create a menu container
+menu_container = st.container()
+
+# Add option menu to menu container
+with menu_container:
+    menu_selection = option_menu(None, ["Home", "Community", "Github", 'Contact'], 
+    icons=['house', 'people', 'github', "chat-square-text"], 
+    menu_icon="cast", default_index=0, orientation="horizontal",
+    styles={
+        "container": {"padding": "0.2rem 0", "background-color": "#22222200"},
+           })
+
+# Handle menu selection
+if menu_selection == "Contact":
+    if not st.session_state.dialog:
+        st.session_state.dialog = True
+        st.experimental_rerun()
+    else:
+        st.session_state.dialog = False
+elif menu_selection == "Github":
+    nav_to("https://github.com/bouzidanas/streamlit-float")    
+elif menu_selection == "Community":
+    nav_to("https://discuss.streamlit.io/t/anybody-interested-in-simple-component-to-float-containers/45013?u=bouzidanas")
+
+# Float menu container
+menu_container.float("top: 0.15rem;z-index: 999990;")
+
+# Create a banner container
 banner_container = st.container()
 
+# Add alert banner to banner container
 with banner_container:
     sac.alert(message='**WARNING! This is a demo. This is not a real article.**', description=None, type='warning', height=None, icon=True, closable=True, banner=True)
 
+# Float banner container
 banner_container.float("bottom: -1rem;z-index: 999992;")
-
-menu_container = st.container()
-
-with menu_container:
-    selected2 = option_menu(None, ["Home", "Upload", "Tasks", 'Settings'], 
-    icons=['house', 'cloud-upload', "list-task", 'gear'], 
-    menu_icon="cast", default_index=0, orientation="horizontal")
-
-menu_container.float("top: 0.2rem;z-index: 999998;")
