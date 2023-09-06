@@ -2,7 +2,7 @@ import streamlit as st
 from __init__ import *
 import streamlit_antd_components as sac
 
-st.set_page_config(page_title='streamlit-float demo')
+st.set_page_config(page_title='streamlit-float demo', initial_sidebar_state='collapsed')
 
 float_init()
 
@@ -10,7 +10,7 @@ if "show" not in st.session_state:
     st.session_state.show = True
 
 with st.sidebar:
-    st.markdown("streamlit-float demo")
+    st.markdown("# streamlit-float")
 
 st.image("https://github.com/bouzidanas/streamlit-float/assets/25779130/6543e315-3e42-4f11-b4a5-939853f2a048")
 st.markdown('''# Large Language Models
