@@ -1,6 +1,7 @@
 import streamlit as st
 from __init__ import *
 import streamlit_antd_components as sac
+from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title='streamlit-float demo', initial_sidebar_state='collapsed')
 
@@ -121,4 +122,13 @@ banner_container = st.container()
 with banner_container:
     sac.alert(message='**WARNING! This is a demo. This is not a real article.**', description=None, type='warning', height=None, icon=True, closable=True, banner=True)
 
-banner_container.float("top: 0.2rem;z-index: 999992;")
+banner_container.float("bottom: -1rem;z-index: 999992;")
+
+menu_container = st.container()
+
+with menu_container:
+    selected2 = option_menu(None, ["Home", "Upload", "Tasks", 'Settings'], 
+    icons=['house', 'cloud-upload', "list-task", 'gear'], 
+    menu_icon="cast", default_index=0, orientation="horizontal")
+
+menu_container.float("top: 0.2rem;z-index: 999998;")
