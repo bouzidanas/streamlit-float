@@ -83,7 +83,7 @@ def float(self, css=None):
 st.delta_generator.DeltaGenerator.float = float
 
 # create a floating box containing markdown content
-def float_box(markdown, width="300px", height="300px", top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, css=None):
+def float_box(markdown, width="300px", height="300px", top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, z_index=None, sticky=False, css=None):
     jct_css = "width: " + width + "; height: " + height + ";border-radius: 0.5rem;padding: 1rem;padding-left: 1.3rem;padding-right: 1.3rem;"
     if shadow is not None and type(shadow) is int and shadow < len(shadow_list) and shadow >= 0:
         jct_css += shadow_list[int(shadow)]
@@ -107,6 +107,10 @@ def float_box(markdown, width="300px", height="300px", top=None, left=None, righ
         jct_css += "bottom: " + bottom + ";"
     if css is not None:
         jct_css += css
+    if z_index is not None:
+        jct_css += "z-index: " + z_index + ";"
+    if sticky:
+        jct_css += "position: sticky;"
 
     new_id = str(uuid.uuid4())[:8]
     new_css = '<style>\ndiv.flt-' + new_id + ' {' + jct_css + '}\n</style>'
@@ -114,7 +118,7 @@ def float_box(markdown, width="300px", height="300px", top=None, left=None, righ
     st.markdown('<div class="floating flt-' + new_id + '">' + markdown + '</div>', unsafe_allow_html=True)
 
 # helper function to create css string
-def float_css_helper(width=None, height=None, top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, css=None):
+def float_css_helper(width=None, height=None, top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, z_index=None, sticky=False, css=None):
     jct_css = ""
     if width is not None:
         jct_css += "width: " + width + ";"
@@ -142,6 +146,11 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
         jct_css += "bottom: " + bottom + ";"
     if css is not None:
         jct_css += css
+    if z_index is not None:
+        jct_css += "z-index: " + z_index + ";"
+    if sticky:
+        jct_css += "position: sticky;"
+
     return jct_css
 
 # Create a floating dialog container 
