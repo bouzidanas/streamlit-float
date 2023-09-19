@@ -1,5 +1,5 @@
 streamlit-float  [![Version](https://img.shields.io/pypi/v/streamlit-float)](https://pypi.org/project/streamlit-float/#history) 
-[![PyPi - Downloads](https://img.shields.io/pypi/dm/streamlit-float)](https://pypi.org/project/streamlit-float/#files)
+[![PyPi - Downloads](https://img.shields.io/pypi/dm/streamlit-float)](https://pypi.org/project/streamlit-float/#files)[![Component Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://float-demo.streamlit.app/)
 ============
 
 Fix the vertical position of Streamlit containers relative to viewport instead of page
