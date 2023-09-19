@@ -151,6 +151,12 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
     if sticky:
         jct_css += "position: sticky;"
 
+    if type(css) is dict:
+        for key, value in css.items():
+            jct_css += f"{key}: {value};"
+    elif type(css) is str:
+        jct_css += css
+
     return jct_css
 
 # Create a floating dialog container 
@@ -164,7 +170,7 @@ def float_dialog(show=False, width=2, background="slategray", transition=2, css=
     if show:
         pos_css = "top: 2.3rem;"
     else:
-        pos_css = "top: -100%;"
+        pos_css = "top: min(-100vh, -100vi);"
 
     if transition is not None and type(transition) is int and transition < len(transition_list) and transition >= 0:
         tran_css = transition_list[int(transition)]

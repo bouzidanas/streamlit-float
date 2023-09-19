@@ -155,7 +155,7 @@ elif menu_selection == "Community":
 menu_container.float("top: 0.15rem;z-index: 999990;")
 
 # Create a floating links
-float_box('<a href="https://pypi.org/project/streamlit-float/">PYPI</a>・<a href="https://github.com/bouzidanas/streamlit-float">Github</a>・<a href="https://discuss.streamlit.io/t/anybody-interested-in-simple-component-to-float-containers/45013?u=bouzidanas">Community</a> ', width="fit-content", height="2rem", right="-5.6rem", bottom="32.2rem", background="transparent", css="flex-direction: row;align-items: center;color: #ffffff99;rotate: 90deg;")
+float_box('<a href="https://pypi.org/project/streamlit-float/">PYPI</a>・<a href="https://github.com/bouzidanas/streamlit-float">Github</a>・<a href="https://discuss.streamlit.io/t/anybody-interested-in-simple-component-to-float-containers/45013?u=bouzidanas">Community</a> ', width="fit-content", height="2rem", right="-5.6rem", top="12rem", background="transparent", css="flex-direction: row;align-items: center;color: #ffffff99;rotate: 90deg;")
 
 # Create a banner container
 banner_container = st.container()
