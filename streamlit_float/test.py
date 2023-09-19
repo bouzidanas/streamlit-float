@@ -51,3 +51,6 @@ with col3:
     st.write("Tomorrow's news &copy;")
 
     float_box("This is a floating box", left="2px", background="black", border="1px solid rgba(250, 250, 250, 0.2)")
+
+test_css = float_css_helper(css={"color": "red", "font-size": "2rem"}, background_color="blue")
+st.write(test_css)

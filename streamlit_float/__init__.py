@@ -118,7 +118,7 @@ def float_box(markdown, width="300px", height="300px", top=None, left=None, righ
     st.markdown('<div class="floating flt-' + new_id + '">' + markdown + '</div>', unsafe_allow_html=True)
 
 # helper function to create css string
-def float_css_helper(width=None, height=None, top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, z_index=None, sticky=False, css=None):
+def float_css_helper(width=None, height=None, top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, z_index=None, sticky=False, css="", **kwargs):
     jct_css = ""
     if width is not None:
         jct_css += "width: " + width + ";"
@@ -144,8 +144,6 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
         jct_css += "right: " + right + ";"
     if bottom is not None:
         jct_css += "bottom: " + bottom + ";"
-    if css is not None:
-        jct_css += css
     if z_index is not None:
         jct_css += "z-index: " + z_index + ";"
     if sticky:
@@ -156,6 +154,9 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
             jct_css += f"{key}: {value};"
     elif type(css) is str:
         jct_css += css
+
+    for key, value in kwargs.items():
+        jct_css += f"{key.replace('_', '-')}: {value};"
 
     return jct_css
 

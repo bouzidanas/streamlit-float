@@ -31,7 +31,10 @@ shadow_list = ["box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;",
                "box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;"
                ]
 
-transition_list = ["transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0, 1, 0.5, 1);", "transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0.15, 0.45, 0.85, 0.55);", "transition-property: all;transition-duration: .6s;transition-timing-function: ease-in-out;"]
+transition_list = ["transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0, 1, 0.5, 1);", 
+                   "transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0.15, 0.45, 0.85, 0.55);", 
+                   "transition-property: all;transition-duration: .6s;transition-timing-function: ease-in-out;"
+                   ]
 
 def float_init():
 # add css to streamlit app
@@ -80,7 +83,7 @@ def float(self, css=None):
 st.delta_generator.DeltaGenerator.float = float
 
 # create a floating box containing markdown content
-def float_box(markdown, width="300px", height="300px", top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, css=None):
+def float_box(markdown, width="300px", height="300px", top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, z_index=None, sticky=False, css=None):
     jct_css = "width: " + width + "; height: " + height + ";border-radius: 0.5rem;padding: 1rem;padding-left: 1.3rem;padding-right: 1.3rem;"
     if shadow is not None and type(shadow) is int and shadow < len(shadow_list) and shadow >= 0:
         jct_css += shadow_list[int(shadow)]
@@ -104,6 +107,10 @@ def float_box(markdown, width="300px", height="300px", top=None, left=None, righ
         jct_css += "bottom: " + bottom + ";"
     if css is not None:
         jct_css += css
+    if z_index is not None:
+        jct_css += "z-index: " + z_index + ";"
+    if sticky:
+        jct_css += "position: sticky;"
 
     new_id = str(uuid.uuid4())[:8]
     new_css = '<style>\ndiv.flt-' + new_id + ' {' + jct_css + '}\n</style>'
@@ -111,7 +118,7 @@ def float_box(markdown, width="300px", height="300px", top=None, left=None, righ
     st.markdown('<div class="floating flt-' + new_id + '">' + markdown + '</div>', unsafe_allow_html=True)
 
 # helper function to create css string
-def float_css_helper(width=None, height=None, top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, css=None):
+def float_css_helper(width=None, height=None, top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, z_index=None, sticky=False, css="", **kwargs):
     jct_css = ""
     if width is not None:
         jct_css += "width: " + width + ";"
@@ -137,14 +144,25 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
         jct_css += "right: " + right + ";"
     if bottom is not None:
         jct_css += "bottom: " + bottom + ";"
-    if css is not None:
+    if z_index is not None:
+        jct_css += "z-index: " + z_index + ";"
+    if sticky:
+        jct_css += "position: sticky;"
+
+    if type(css) is dict:
+        for key, value in css.items():
+            jct_css += f"{key}: {value};"
+    elif type(css) is str:
         jct_css += css
+
+    for key, value in kwargs.items():
+        jct_css += f"{key.replace('_', '-')}: {value};"
+
     return jct_css
 
 # Create a floating dialog container 
 # This needs to be fleshed out more. Add more options for positions, transitions, etc.
-def float_dialog(show=False, width=2, transition=2, css=""):
-
+def float_dialog(show=False, width=2, background="slategray", transition=2, css=""):
     float_col_a, float_col_b = st.columns([width, 1])
 
     with float_col_a:    
@@ -153,7 +171,7 @@ def float_dialog(show=False, width=2, transition=2, css=""):
     if show:
         pos_css = "top: 2.3rem;"
     else:
-        pos_css = "top: -100%;"
+        pos_css = "top: min(-100vh, -100vi);"
 
     if transition is not None and type(transition) is int and transition < len(transition_list) and transition >= 0:
         tran_css = transition_list[int(transition)]
@@ -163,5 +181,5 @@ def float_dialog(show=False, width=2, transition=2, css=""):
         tran_css = ""
 
     float_col_b.float(float_css_helper(width="100%", height="100%", left="0", top="0", background="rgba(0, 0, 0, 0.4)", css="z-index: 999000;" + pos_css))
-    float_col_a.float(pos_css + "padding: 2rem;padding-bottom: 0.9rem;border-radius: 0.5rem;left: 50%;transform: translateX(-50%);background-color: slategray;z-index: 999900;" + tran_css + css + "transition-property: top;")
+    float_col_a.float(pos_css + "padding: 2rem;padding-bottom: 0.9rem;border-radius: 0.5rem;left: 50%;transform: translateX(-50%);z-index: 999900;" + tran_css + css + "transition-property: top;background-color: " + background + ";")
     return dialog_container

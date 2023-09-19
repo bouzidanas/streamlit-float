@@ -1,14 +1,25 @@
 import streamlit as st
 from __init__ import *
+import streamlit_antd_components as sac
+from streamlit_option_menu import option_menu
 
-st.set_page_config(
-    page_title='streamlit-float demo',
-)
+st.set_page_config(page_title='streamlit-float demo', initial_sidebar_state='collapsed')
 
 float_init()
 
 if "show" not in st.session_state:
-    st.session_state.show = True
+    st.session_state.show = False
+
+# Function to navigate to a new page
+# An improvement here would be to open in new tab
+def nav_to(url):
+    nav_script = """
+        <meta http-equiv="refresh" content="0; url='%s'">
+    """ % (url)
+    st.write(nav_script, unsafe_allow_html=True)
+
+with st.sidebar:
+    st.markdown("# streamlit-float")
 
 st.image("https://github.com/bouzidanas/streamlit-float/assets/25779130/6543e315-3e42-4f11-b4a5-939853f2a048")
 st.markdown('''# Large Language Models
@@ -98,8 +109,8 @@ if "dialog" not in st.session_state:
 
 # Button that opens the dialog
 if st.button("Contact us"):
-        st.session_state.dialog = True
-        st.experimental_rerun()
+    st.session_state.dialog = True
+    st.experimental_rerun()
 
 # Create Float Dialog container
 dialog_container = float_dialog(st.session_state.dialog)
@@ -113,3 +124,58 @@ with dialog_container:
     if st.button("Send", key="send"):
         st.session_state.dialog = False
         st.experimental_rerun()
+
+# Create a menu container
+menu_container = st.container()
+
+# Add option menu to menu container
+with menu_container:
+    menu_selection = option_menu(None, ["Home", "Community", "Video", 'Contact'], 
+    icons=['house', 'people', 'play-btn', "chat-square-text"], 
+    menu_icon="cast", default_index=0, orientation="horizontal",
+    styles={
+        "container": {"padding": "0.2rem 0", "background-color": "#22222200"},
+           })
+
+# Handle menu selection
+if menu_selection == "Contact":
+    if not st.session_state.dialog:
+        st.session_state.dialog = True
+        st.experimental_rerun()
+    else:
+        st.session_state.dialog = False
+elif menu_selection == "Video":
+    if not st.session_state.show:
+        st.session_state.show = True
+        st.experimental_rerun()    
+elif menu_selection == "Community":
+    nav_to("https://discuss.streamlit.io/t/anybody-interested-in-simple-component-to-float-containers/45013?u=bouzidanas")
+
+# Float menu container
+menu_container.float("top: 0.15rem;z-index: 999990;")
+
+# Create a floating links
+float_box('<a href="https://pypi.org/project/streamlit-float/">PYPI</a>・<a href="https://github.com/bouzidanas/streamlit-float">Github</a>・<a href="https://discuss.streamlit.io/t/anybody-interested-in-simple-component-to-float-containers/45013?u=bouzidanas">Community</a> ', width="fit-content", height="2rem", right="-5.6rem", top="12rem", background="transparent", css="flex-direction: row;align-items: center;color: #ffffff99;rotate: 90deg;")
+
+# Create a banner container
+banner_container = st.container()
+
+# Add alert banner to banner container
+with banner_container:
+    sac.alert(message='**WARNING! This is a demo. This is not a real article.**', description=None, type='warning', height=None, icon=True, closable=True, banner=True)
+
+# Float banner container
+banner_container.float("bottom: -1rem;z-index: 999992;")
+
+# Custome styles for floating links
+# Note Float box container has "floating" class
+style = '''<style>
+.floating a {
+    color: #ffffff99;
+    text-decoration: none;
+}
+.floating a:hover {
+    color: #ffffff!important;
+}
+</style>'''
+st.markdown(style, unsafe_allow_html=True)
