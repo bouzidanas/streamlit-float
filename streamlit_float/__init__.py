@@ -41,6 +41,12 @@ def float_init():
     # add css to streamlit app
     html_style = '''
     <style>
+    div:has( >.element-container div.float) {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        z-index: 99;
+    }
    
     div.float {
         height:0%;
@@ -59,6 +65,8 @@ def float_init():
 def float_parent(css=None):
     if css is not None:
         new_id = str(uuid.uuid4())[:8]
+        new_css = '<style>\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
+        st.markdown(new_css, unsafe_allow_html=True)
         st.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
         js_ = f'''
             <script>
@@ -72,7 +80,7 @@ def float_parent(css=None):
                 float_el_hide.style = 'display:none;'
             </script>
             '''
-        st.components.v1.html(js_)
+        st.components.v1.html(js_, height=0, width=0)
 
     else:
         st.markdown('<div class="float"></div>', unsafe_allow_html=True)
@@ -81,6 +89,8 @@ def float_parent(css=None):
 def float(self, css=None):
     if css is not None:
         new_id = str(uuid.uuid4())[:8]
+        new_css = '<style>\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
+        st.markdown(new_css, unsafe_allow_html=True) 
         self.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
         js_ = f'''
             <script>
@@ -94,7 +104,7 @@ def float(self, css=None):
                 float_el_hide.style = 'display:none;'
             </script>
             '''
-        st.components.v1.html(js_)
+        st.components.v1.html(js_, height=0, width=0)
     else:
         self.markdown('<div class="float"></div>', unsafe_allow_html=True)
 
