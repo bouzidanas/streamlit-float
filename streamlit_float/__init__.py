@@ -259,5 +259,4 @@ def float_dialog(show=False, width=2, background="var(--default-backgroundColor)
 
 def overlay(show=False, z_index="999989", color="#000000", alpha=0.0, blur="1rem"):
     if show:
-        float_box("", width="100%", height="100%", left="0", top="0", css=float_css_helper(background=color + ("0%x" % int(255*alpha))[-2:], backdrop_filter="blur(" + blur + ")", z_index=z_index))
-
+        float_box("", width="100%", height="100%", left="0", top="0", css=float_css_helper(background=color + ("0%x" % int(255*alpha))[-2:], backdrop_filter="blur(" + blur + ")", z_index=z_index))   
