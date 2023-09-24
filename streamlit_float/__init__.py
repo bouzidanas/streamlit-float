@@ -37,8 +37,47 @@ transition_list = ["transition-property: all;transition-duration: .5s;transition
                    "transition-property: all;transition-duration: .6s;transition-timing-function: ease-in-out;"
                    ]
 
+<<<<<<< master
 def float_init():
     # add css to streamlit app
+=======
+def theme_init():
+    components.html("""
+<script>
+    root = window.parent.document;
+    body = root.body;
+    styleObj = root.documentElement.style;
+    bodyProps = window.getComputedStyle(body, null);
+    bgColor = bodyProps.getPropertyValue('background-color');
+    color = bodyProps.getPropertyValue('color');
+    font = bodyProps.getPropertyValue('font-family');
+    styleObj.setProperty('--default-backgroundColor', bgColor);
+    styleObj.setProperty('--default-textColor', color);
+    styleObj.setProperty('--default-font', font);
+                        
+    cont = window.parent.document.getElementById("elim").parentElement;
+    while (!cont.classList.contains("element-container")){
+        cont = cont.parentElement;            
+    }
+    prev = cont.previousElementSibling;
+    first = prev.previousElementSibling;          
+    
+    primaryColor = window.getComputedStyle(prev.firstElementChild.firstElementChild).getPropertyValue('background-color');
+    styleObj.setProperty('--default-primaryColor', primaryColor);
+    
+    cont.style.setProperty('display', 'none');
+    prev.style.setProperty('display', 'none');
+    first.style.setProperty('display', 'none');
+</script>
+""", 
+            height=0, 
+            width=0)
+    st.button("", type="primary")
+    st.markdown("<div id='elim'></div>", unsafe_allow_html=True)
+
+def float_init(theme=True):
+# add css to streamlit app
+>>>>>>> master
     html_style = '''
     <style>
     div:has( >.element-container div.float) {
@@ -47,8 +86,13 @@ def float_init():
         position: fixed;
         z-index: 99;
     }
+<<<<<<< master
    
     div.float {
+=======
+    div.float, div.elim {
+        display: none;
+>>>>>>> master
         height:0%;
     }
     div.floating {
@@ -60,6 +104,42 @@ def float_init():
     </style>
     '''
     st.markdown(html_style, unsafe_allow_html=True)
+    if theme:
+
+        components.html("""
+<script>
+    root = window.parent.document;
+    body = root.body;
+    styleObj = root.documentElement.style;
+    bodyProps = window.getComputedStyle(body, null);
+    bgColor = bodyProps.getPropertyValue('background-color');
+    color = bodyProps.getPropertyValue('color');
+    font = bodyProps.getPropertyValue('font-family');
+    styleObj.setProperty('--default-backgroundColor', bgColor);
+    styleObj.setProperty('--default-textColor', color);
+    styleObj.setProperty('--default-font', font);
+                        
+    cont = window.parent.document.getElementById("elim").parentElement;
+    while (!cont.classList.contains("element-container")){
+        cont = cont.parentElement;            
+    }
+    prev = cont.previousElementSibling;
+    second = prev.previousElementSibling;
+    first = second.previousElementSibling;           
+    
+    primaryColor = window.getComputedStyle(prev.firstElementChild.firstElementChild).getPropertyValue('background-color');
+    styleObj.setProperty('--default-primaryColor', primaryColor);
+    
+    cont.style.setProperty('display', 'none');
+    prev.style.setProperty('display', 'none');
+    first.style.setProperty('display', 'none');
+    second.style.setProperty('display', 'none');
+</script>
+""", 
+            height=0, 
+            width=0)
+        st.button("", type="primary")
+        st.markdown("<div id='elim'></div>", unsafe_allow_html=True)
 
 # adds empty div to parent in order to target it with css
 def float_parent(css=None):
@@ -191,7 +271,7 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
 
 # Create a floating dialog container 
 # This needs to be fleshed out more. Add more options for positions, transitions, etc.
-def float_dialog(show=False, width=2, background="slategray", transition=2, css=""):
+def float_dialog(show=False, width=2, background="var(--default-backgroundColor)", transition=2, css=""):
     float_col_a, float_col_b = st.columns([width, 1])
 
     with float_col_a:    
@@ -212,3 +292,9 @@ def float_dialog(show=False, width=2, background="slategray", transition=2, css=
     float_col_b.float(float_css_helper(width="100%", height="100%", left="0", top="0", background="rgba(0, 0, 0, 0.4)", css="z-index: 999000;" + pos_css))
     float_col_a.float(pos_css + "padding: 2rem;padding-bottom: 0.9rem;border-radius: 0.5rem;left: 50%;transform: translateX(-50%);z-index: 999900;" + tran_css + css + "transition-property: top;background-color: " + background + ";")
     return dialog_container
+
+
+def overlay(show=False, z_index="999989", color="#000000", alpha=0.0, blur="1rem"):
+    if show:
+        float_box("", width="100%", height="100%", left="0", top="0", css=float_css_helper(background=color + ("0%x" % int(255*alpha))[-2:], backdrop_filter="blur(" + blur + ")", z_index=z_index))
+
