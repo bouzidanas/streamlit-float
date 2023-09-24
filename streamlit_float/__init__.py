@@ -1,5 +1,6 @@
 import streamlit as st
 import uuid
+import streamlit.components.v1 as components
 
 # list containing various types of box-shadow implementations (source: https://getcssscan.com/css-box-shadow-examples)
 shadow_list = ["box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;", 
@@ -36,7 +37,7 @@ transition_list = ["transition-property: all;transition-duration: .5s;transition
                    "transition-property: all;transition-duration: .6s;transition-timing-function: ease-in-out;"
                    ]
 
-def float_init():
+def float_init(theme=False):
 # add css to streamlit app
     html_style = '''
     <style>
@@ -46,7 +47,8 @@ def float_init():
         position: fixed;
         z-index: 99;
     }
-    div.float {
+    div.float, div.elim {
+        display: none;
         height:0%;
     }
     div.floating {
@@ -58,6 +60,42 @@ def float_init():
     </style>
     '''
     st.markdown(html_style, unsafe_allow_html=True)
+    if theme:
+
+        components.html("""
+<script>
+    root = window.parent.document;
+    body = root.body;
+    styleObj = root.documentElement.style;
+    bodyProps = window.getComputedStyle(body, null);
+    bgColor = bodyProps.getPropertyValue('background-color');
+    color = bodyProps.getPropertyValue('color');
+    font = bodyProps.getPropertyValue('font-family');
+    styleObj.setProperty('--default-backgroundColor', bgColor);
+    styleObj.setProperty('--default-textColor', color);
+    styleObj.setProperty('--default-font', font);
+                        
+    cont = window.parent.document.getElementById("elim").parentElement;
+    while (!cont.classList.contains("element-container")){
+        cont = cont.parentElement;            
+    }
+    prev = cont.previousElementSibling;
+    second = prev.previousElementSibling;
+    first = second.previousElementSibling;           
+    
+    primaryColor = window.getComputedStyle(prev.firstElementChild.firstElementChild).getPropertyValue('background-color');
+    styleObj.setProperty('--default-primaryColor', primaryColor);
+    
+    cont.style.setProperty('display', 'none');
+    prev.style.setProperty('display', 'none');
+    first.style.setProperty('display', 'none');
+    second.style.setProperty('display', 'none');
+</script>
+""", 
+            height=0, 
+            width=0)
+        st.button("", type="primary")
+        st.markdown("<div id='elim'></div>", unsafe_allow_html=True)
 
 # adds empty div to parent in order to target it with css
 def float_parent(css=None):
@@ -162,7 +200,7 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
 
 # Create a floating dialog container 
 # This needs to be fleshed out more. Add more options for positions, transitions, etc.
-def float_dialog(show=False, width=2, background="slategray", transition=2, css=""):
+def float_dialog(show=False, width=2, background="var(--default-backgroundColor)", transition=2, css=""):
     float_col_a, float_col_b = st.columns([width, 1])
 
     with float_col_a:    
