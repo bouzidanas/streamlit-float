@@ -37,7 +37,7 @@ transition_list = ["transition-property: all;transition-duration: .5s;transition
                    "transition-property: all;transition-duration: .6s;transition-timing-function: ease-in-out;"
                    ]
 
-def float_init(theme=False):
+def float_init(theme=True):
 # add css to streamlit app
     html_style = '''
     <style>
