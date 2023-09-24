@@ -95,41 +95,7 @@ def float_init(theme=True):
     '''
     st.markdown(html_style, unsafe_allow_html=True)
     if theme:
-
-        components.html("""
-<script>
-    root = window.parent.document;
-    body = root.body;
-    styleObj = root.documentElement.style;
-    bodyProps = window.getComputedStyle(body, null);
-    bgColor = bodyProps.getPropertyValue('background-color');
-    color = bodyProps.getPropertyValue('color');
-    font = bodyProps.getPropertyValue('font-family');
-    styleObj.setProperty('--default-backgroundColor', bgColor);
-    styleObj.setProperty('--default-textColor', color);
-    styleObj.setProperty('--default-font', font);
-                        
-    cont = window.parent.document.getElementById("elim").parentElement;
-    while (!cont.classList.contains("element-container")){
-        cont = cont.parentElement;            
-    }
-    prev = cont.previousElementSibling;
-    second = prev.previousElementSibling;
-    first = second.previousElementSibling;           
-    
-    primaryColor = window.getComputedStyle(prev.firstElementChild.firstElementChild).getPropertyValue('background-color');
-    styleObj.setProperty('--default-primaryColor', primaryColor);
-    
-    cont.style.setProperty('display', 'none');
-    prev.style.setProperty('display', 'none');
-    first.style.setProperty('display', 'none');
-    second.style.setProperty('display', 'none');
-</script>
-""", 
-            height=0, 
-            width=0)
-        st.button("", type="primary")
-        st.markdown("<div id='elim'></div>", unsafe_allow_html=True)
+        theme_init()
 
 # adds empty div to parent in order to target it with css
 def float_parent(css=None):
@@ -138,6 +104,19 @@ def float_parent(css=None):
         new_css = '<style>\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
         st.markdown(new_css, unsafe_allow_html=True)
         st.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
+        js_ = f'''
+            <script>
+                float_el = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
+                float_el_parent_two_levels_up = float_el[0].closest("div > .element-container ").parentNode
+                float_el_parent_two_levels_up.id = "float-this-component-{new_id}"
+                float_el_parent_two_levels_up.style = '{css}'
+                new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
+                new_float_id_el.style = 'display:none;'
+                float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
+                float_el_hide.style = 'display:none;'
+            </script>
+            '''
+        st.components.v1.html(js_)
     else:
         st.markdown('<div class="float"></div>', unsafe_allow_html=True)
 
@@ -148,6 +127,19 @@ def float(self, css=None):
         new_css = '<style>\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
         st.markdown(new_css, unsafe_allow_html=True)
         self.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
+        js_ = f'''
+            <script>
+                float_el_delta = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
+                float_el_parent_two_levels_up = float_el_delta[0].closest("div > .element-container ").parentNode
+                float_el_parent_two_levels_up.id = "float-this-component-{new_id}"
+                float_el_parent_two_levels_up.style = 'display:flex; flex-direction:column; position:fixed; z-index:99; {css}'
+                new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
+                new_float_id_el.style = 'display:none;'
+                float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
+                float_el_hide.style = 'display:none;'
+            </script>
+            '''
+        st.components.v1.html(js_)
     else:
         self.markdown('<div class="float"></div>', unsafe_allow_html=True)
 
