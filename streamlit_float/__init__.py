@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import uuid
 
 # list containing various types of box-shadow implementations (source: https://getcssscan.com/css-box-shadow-examples)
@@ -37,15 +38,10 @@ transition_list = ["transition-property: all;transition-duration: .5s;transition
                    ]
 
 def float_init():
-# add css to streamlit app
+    # add css to streamlit app
     html_style = '''
     <style>
-    div:has( >.element-container div.float) {
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        z-index: 99;
-    }
+   
     div.float {
         height:0%;
     }
@@ -63,9 +59,21 @@ def float_init():
 def float_parent(css=None):
     if css is not None:
         new_id = str(uuid.uuid4())[:8]
-        new_css = '<style>\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
-        st.markdown(new_css, unsafe_allow_html=True)
         st.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
+        js_ = f'''
+            <script>
+                float_el = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
+                float_el_parent_two_levels_up = float_el[0].closest("div > .element-container ").parentNode
+                float_el_parent_two_levels_up.id = "float-this-component-{new_id}"
+                float_el_parent_two_levels_up.style = '{css}'
+                new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
+                new_float_id_el.style = 'display:none;'
+                float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
+                float_el_hide.style = 'display:none;'
+            </script>
+            '''
+        st.components.v1.html(js_)
+
     else:
         st.markdown('<div class="float"></div>', unsafe_allow_html=True)
 
@@ -73,9 +81,20 @@ def float_parent(css=None):
 def float(self, css=None):
     if css is not None:
         new_id = str(uuid.uuid4())[:8]
-        new_css = '<style>\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
-        st.markdown(new_css, unsafe_allow_html=True)
         self.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
+        js_ = f'''
+            <script>
+                float_el_delta = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
+                float_el_parent_two_levels_up = float_el_delta[0].closest("div > .element-container ").parentNode
+                float_el_parent_two_levels_up.id = "float-this-component-{new_id}"
+                float_el_parent_two_levels_up.style = 'display:flex; flex-direction:column; position:fixed; z-index:99; {css}'
+                new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
+                new_float_id_el.style = 'display:none;'
+                float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
+                float_el_hide.style = 'display:none;'
+            </script>
+            '''
+        st.components.v1.html(js_)
     else:
         self.markdown('<div class="float"></div>', unsafe_allow_html=True)
 
