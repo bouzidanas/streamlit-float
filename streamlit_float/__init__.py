@@ -1,6 +1,6 @@
 import streamlit as st
-import streamlit.components.v1 as components
 import uuid
+import streamlit.components.v1 as components
 
 # list containing various types of box-shadow implementations (source: https://getcssscan.com/css-box-shadow-examples)
 shadow_list = ["box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;", 
@@ -37,10 +37,6 @@ transition_list = ["transition-property: all;transition-duration: .5s;transition
                    "transition-property: all;transition-duration: .6s;transition-timing-function: ease-in-out;"
                    ]
 
-<<<<<<< master
-def float_init():
-    # add css to streamlit app
-=======
 def theme_init():
     components.html("""
 <script>
@@ -77,7 +73,6 @@ def theme_init():
 
 def float_init(theme=True):
 # add css to streamlit app
->>>>>>> master
     html_style = '''
     <style>
     div:has( >.element-container div.float) {
@@ -86,13 +81,8 @@ def float_init(theme=True):
         position: fixed;
         z-index: 99;
     }
-<<<<<<< master
-   
-    div.float {
-=======
     div.float, div.elim {
         display: none;
->>>>>>> master
         height:0%;
     }
     div.floating {
@@ -148,20 +138,6 @@ def float_parent(css=None):
         new_css = '<style>\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
         st.markdown(new_css, unsafe_allow_html=True)
         st.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
-        js_ = f'''
-            <script>
-                float_el = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
-                float_el_parent_two_levels_up = float_el[0].closest("div > .element-container ").parentNode
-                float_el_parent_two_levels_up.id = "float-this-component-{new_id}"
-                float_el_parent_two_levels_up.style = '{css}'
-                new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
-                new_float_id_el.style = 'display:none;'
-                float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
-                float_el_hide.style = 'display:none;'
-            </script>
-            '''
-        st.components.v1.html(js_, height=0, width=0)
-
     else:
         st.markdown('<div class="float"></div>', unsafe_allow_html=True)
 
@@ -170,21 +146,8 @@ def float(self, css=None):
     if css is not None:
         new_id = str(uuid.uuid4())[:8]
         new_css = '<style>\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
-        st.markdown(new_css, unsafe_allow_html=True) 
+        st.markdown(new_css, unsafe_allow_html=True)
         self.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
-        js_ = f'''
-            <script>
-                float_el_delta = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
-                float_el_parent_two_levels_up = float_el_delta[0].closest("div > .element-container ").parentNode
-                float_el_parent_two_levels_up.id = "float-this-component-{new_id}"
-                float_el_parent_two_levels_up.style = 'display:flex; flex-direction:column; position:fixed; z-index:99; {css}'
-                new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
-                new_float_id_el.style = 'display:none;'
-                float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
-                float_el_hide.style = 'display:none;'
-            </script>
-            '''
-        st.components.v1.html(js_, height=0, width=0)
     else:
         self.markdown('<div class="float"></div>', unsafe_allow_html=True)
 
@@ -297,4 +260,3 @@ def float_dialog(show=False, width=2, background="var(--default-backgroundColor)
 def overlay(show=False, z_index="999989", color="#000000", alpha=0.0, blur="1rem"):
     if show:
         float_box("", width="100%", height="100%", left="0", top="0", css=float_css_helper(background=color + ("0%x" % int(255*alpha))[-2:], backdrop_filter="blur(" + blur + ")", z_index=z_index))
-
