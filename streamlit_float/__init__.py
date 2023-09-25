@@ -65,6 +65,8 @@ def theme_init(include_unstable_primary=False):
     styleObj = root.documentElement.style;
     bodyProps = window.getComputedStyle(body, null);
     bgColor = bodyProps.getPropertyValue('background-color');
+    //rgbtohex = (rgb) => `#${rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).slice(1).map(n => parseInt(n, 10).toString(16).padStart(2, '0')).join('')}`
+    //bgColor = rgbtohex(bgColor);
     color = bodyProps.getPropertyValue('color');
     font = bodyProps.getPropertyValue('font-family');
     styleObj.setProperty('--default-backgroundColor', bgColor);
@@ -78,7 +80,8 @@ def theme_init(include_unstable_primary=False):
 """ + javascript_end, 
             height=0, 
             width=0)
-    st.button("", type="primary")
+    if include_unstable_primary:
+        st.button("", type="primary")
     st.markdown("<div id='elim'></div>", unsafe_allow_html=True)
 
 def float_init(theme=True):
@@ -259,6 +262,16 @@ def float_dialog(show=False, width=2, background="slategray", transition=2, css=
     return dialog_container
 
 
-def overlay(show=False, z_index="999989", color="#000000", alpha=0.0, blur="1rem"):
+def float_overlay(show=False, z_index="999989", color="#000000", alpha=0.0, blur="1rem", filter=None):
+    if color.startswith("#"):
+        color += ("0%x" % int(255*alpha))[-2:]
+    elif color.startswith("rgb"):
+        color = color.replace(")", f", {alpha})")
+
+    if filter is not None:
+        backdrop_filter = filter
+    else:
+        backdrop_filter = "blur(" + blur + ")"
+        
     if show:
-        float_box("", width="100%", height="100%", left="0", top="0", css=float_css_helper(background=color + ("0%x" % int(255*alpha))[-2:], backdrop_filter="blur(" + blur + ")", z_index=z_index))   
+        float_box("", width="100%", height="100%", left="0", top="0", css=float_css_helper(background=color, backdrop_filter=backdrop_filter, z_index=z_index))   

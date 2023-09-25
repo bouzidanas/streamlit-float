@@ -1,5 +1,6 @@
 import streamlit as st
 import uuid
+import streamlit.components.v1 as components
 
 # list containing various types of box-shadow implementations (source: https://getcssscan.com/css-box-shadow-examples)
 shadow_list = ["box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;", 
@@ -36,7 +37,51 @@ transition_list = ["transition-property: all;transition-duration: .5s;transition
                    "transition-property: all;transition-duration: .6s;transition-timing-function: ease-in-out;"
                    ]
 
-def float_init():
+def theme_init(include_unstable_primary=False):
+    if include_unstable_primary:
+        javascript_end = """
+    prev = cont.previousElementSibling;
+    first = prev.previousElementSibling;          
+    
+    primaryColor = window.getComputedStyle(prev.firstElementChild.firstElementChild).getPropertyValue('background-color');
+    styleObj.setProperty('--default-primaryColor', primaryColor);
+    first.style.setProperty('display', 'none');
+    
+    cont.style.setProperty('display', 'none');
+    prev.style.setProperty('display', 'none');
+</script>"""
+    else:
+        javascript_end = """
+    prev = cont.previousElementSibling;          
+        
+    cont.style.setProperty('display', 'none');
+    prev.style.setProperty('display', 'none');
+</script>"""
+
+    components.html("""
+<script>
+    root = window.parent.document;
+    body = root.body;
+    styleObj = root.documentElement.style;
+    bodyProps = window.getComputedStyle(body, null);
+    bgColor = bodyProps.getPropertyValue('background-color');
+    color = bodyProps.getPropertyValue('color');
+    font = bodyProps.getPropertyValue('font-family');
+    styleObj.setProperty('--default-backgroundColor', bgColor);
+    styleObj.setProperty('--default-textColor', color);
+    styleObj.setProperty('--default-font', font);
+                        
+    cont = window.parent.document.getElementById("elim").parentElement;
+    while (!cont.classList.contains("element-container")){
+        cont = cont.parentElement;            
+    }
+""" + javascript_end, 
+            height=0, 
+            width=0)
+    st.button("", type="primary")
+    st.markdown("<div id='elim'></div>", unsafe_allow_html=True)
+
+def float_init(theme=True):
 # add css to streamlit app
     html_style = '''
     <style>
@@ -46,7 +91,8 @@ def float_init():
         position: fixed;
         z-index: 99;
     }
-    div.float {
+    div.float, div.elim {
+        display: none;
         height:0%;
     }
     div.floating {
@@ -58,6 +104,8 @@ def float_init():
     </style>
     '''
     st.markdown(html_style, unsafe_allow_html=True)
+    if theme:
+        theme_init()
 
 # adds empty div to parent in order to target it with css
 def float_parent(css=None):
@@ -66,6 +114,19 @@ def float_parent(css=None):
         new_css = '<style>\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
         st.markdown(new_css, unsafe_allow_html=True)
         st.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
+        js_ = f'''
+            <script>
+                float_el = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
+                float_el_parent_two_levels_up = float_el[0].closest("div > .element-container ").parentNode
+                float_el_parent_two_levels_up.id = "float-this-component-{new_id}"
+                float_el_parent_two_levels_up.style = '{css}'
+                new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
+                new_float_id_el.style = 'display:none;'
+                float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
+                float_el_hide.style = 'display:none;'
+            </script>
+            '''
+        st.components.v1.html(js_)
     else:
         st.markdown('<div class="float"></div>', unsafe_allow_html=True)
 
@@ -76,6 +137,19 @@ def float(self, css=None):
         new_css = '<style>\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
         st.markdown(new_css, unsafe_allow_html=True)
         self.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
+        js_ = f'''
+            <script>
+                float_el_delta = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
+                float_el_parent_two_levels_up = float_el_delta[0].closest("div > .element-container ").parentNode
+                float_el_parent_two_levels_up.id = "float-this-component-{new_id}"
+                float_el_parent_two_levels_up.style = 'display:flex; flex-direction:column; position:fixed; z-index:99; {css}'
+                new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
+                new_float_id_el.style = 'display:none;'
+                float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
+                float_el_hide.style = 'display:none;'
+            </script>
+            '''
+        st.components.v1.html(js_)
     else:
         self.markdown('<div class="float"></div>', unsafe_allow_html=True)
 
@@ -108,7 +182,7 @@ def float_box(markdown, width="300px", height="300px", top=None, left=None, righ
     if css is not None:
         jct_css += css
     if z_index is not None:
-        jct_css += "z-index: " + z_index + ";"
+        jct_css += "z-index: " + str(z_index) + ";"
     if sticky:
         jct_css += "position: sticky;"
 
@@ -183,3 +257,8 @@ def float_dialog(show=False, width=2, background="slategray", transition=2, css=
     float_col_b.float(float_css_helper(width="100%", height="100%", left="0", top="0", background="rgba(0, 0, 0, 0.4)", css="z-index: 999000;" + pos_css))
     float_col_a.float(pos_css + "padding: 2rem;padding-bottom: 0.9rem;border-radius: 0.5rem;left: 50%;transform: translateX(-50%);z-index: 999900;" + tran_css + css + "transition-property: top;background-color: " + background + ";")
     return dialog_container
+
+
+def overlay(show=False, z_index="999989", color="#000000", alpha=0.0, blur="1rem"):
+    if show:
+        float_box("", width="100%", height="100%", left="0", top="0", css=float_css_helper(background=color + ("0%x" % int(255*alpha))[-2:], backdrop_filter="blur(" + blur + ")", z_index=z_index))   
