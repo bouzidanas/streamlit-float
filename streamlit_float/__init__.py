@@ -37,7 +37,27 @@ transition_list = ["transition-property: all;transition-duration: .5s;transition
                    "transition-property: all;transition-duration: .6s;transition-timing-function: ease-in-out;"
                    ]
 
-def theme_init():
+def theme_init(include_unstable_primary=False):
+    if include_unstable_primary:
+        javascript_end = """
+    prev = cont.previousElementSibling;
+    first = prev.previousElementSibling;          
+    
+    primaryColor = window.getComputedStyle(prev.firstElementChild.firstElementChild).getPropertyValue('background-color');
+    styleObj.setProperty('--default-primaryColor', primaryColor);
+    first.style.setProperty('display', 'none');
+    
+    cont.style.setProperty('display', 'none');
+    prev.style.setProperty('display', 'none');
+</script>"""
+    else:
+        javascript_end = """
+    prev = cont.previousElementSibling;          
+        
+    cont.style.setProperty('display', 'none');
+    prev.style.setProperty('display', 'none');
+</script>"""
+
     components.html("""
 <script>
     root = window.parent.document;
@@ -55,17 +75,7 @@ def theme_init():
     while (!cont.classList.contains("element-container")){
         cont = cont.parentElement;            
     }
-    prev = cont.previousElementSibling;
-    first = prev.previousElementSibling;          
-    
-    primaryColor = window.getComputedStyle(prev.firstElementChild.firstElementChild).getPropertyValue('background-color');
-    styleObj.setProperty('--default-primaryColor', primaryColor);
-    
-    cont.style.setProperty('display', 'none');
-    prev.style.setProperty('display', 'none');
-    first.style.setProperty('display', 'none');
-</script>
-""", 
+""" + javascript_end, 
             height=0, 
             width=0)
     st.button("", type="primary")
@@ -172,7 +182,7 @@ def float_box(markdown, width="300px", height="300px", top=None, left=None, righ
     if css is not None:
         jct_css += css
     if z_index is not None:
-        jct_css += "z-index: " + z_index + ";"
+        jct_css += "z-index: " + str(z_index) + ";"
     if sticky:
         jct_css += "position: sticky;"
 
@@ -226,7 +236,7 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
 
 # Create a floating dialog container 
 # This needs to be fleshed out more. Add more options for positions, transitions, etc.
-def float_dialog(show=False, width=2, background="var(--default-backgroundColor)", transition=2, css=""):
+def float_dialog(show=False, width=2, background="slategray", transition=2, css=""):
     float_col_a, float_col_b = st.columns([width, 1])
 
     with float_col_a:    

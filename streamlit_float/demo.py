@@ -113,7 +113,7 @@ if st.button("Contact us"):
     st.experimental_rerun()
 
 # Create Float Dialog container
-dialog_container = float_dialog(st.session_state.dialog)
+dialog_container = float_dialog(st.session_state.dialog, background="var(--default-backgroundColor)")
 
 # Add contents of Dialog including button to close it
 with dialog_container:
@@ -125,12 +125,22 @@ with dialog_container:
         st.session_state.dialog = False
         st.experimental_rerun()
 
+# Initialize session variable that will open/close overlay
+if "overlay" not in st.session_state:
+    st.session_state.overlay = False
+
+# Add overlay to app
+overlay(show=st.session_state.overlay)
+
+if st.session_state.overlay:
+    float_box('<div style="text-align: right;">&#8593<br/><p style="font-size: larger;font-weight: bold">Click "Contact" in the menu to show dialog</p></div>', top="2rem", right="calc(40% - 10rem)", z_index=999999)
+
 # Create a menu container
 menu_container = st.container()
 
 # Add option menu to menu container
 with menu_container:
-    menu_selection = option_menu(None, ["Home", "Community", "Video", 'Contact'], 
+    menu_selection = option_menu(None, ["Home", "Tutorial", "Video", 'Contact'], 
     icons=['house', 'people', 'play-btn', "chat-square-text"], 
     menu_icon="cast", default_index=0, orientation="horizontal",
     styles={
@@ -148,8 +158,12 @@ elif menu_selection == "Video":
     if not st.session_state.show:
         st.session_state.show = True
         st.experimental_rerun()    
-elif menu_selection == "Community":
-    nav_to("https://discuss.streamlit.io/t/anybody-interested-in-simple-component-to-float-containers/45013?u=bouzidanas")
+elif menu_selection == "Tutorial":
+    if not st.session_state.overlay:
+        st.session_state.overlay = True
+        st.experimental_rerun()
+    else:
+        st.session_state.overlay = False
 
 # Float menu container
 menu_container.float("top: 0.15rem;z-index: 999990;")
@@ -179,5 +193,3 @@ style = '''<style>
 }
 </style>'''
 st.markdown(style, unsafe_allow_html=True)
-
-overlay(show=True)
