@@ -84,7 +84,7 @@ def theme_init(include_unstable_primary=False):
         st.button("", type="primary")
     st.markdown("<div id='elim'></div>", unsafe_allow_html=True)
 
-def float_init(theme=True):
+def float_init(theme=True, include_unstable_primary=False):
 # add css to streamlit app
     html_style = '''
     <style>
@@ -108,7 +108,7 @@ def float_init(theme=True):
     '''
     st.markdown(html_style, unsafe_allow_html=True)
     if theme:
-        theme_init()
+        theme_init(include_unstable_primary=include_unstable_primary)
 
 # adds empty div to parent in order to target it with css
 def float_parent(css=None):
