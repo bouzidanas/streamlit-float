@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: streamlit-float
-Version: 0.3.0
+Version: 0.3.2
 Summary: Fix Streamlit containers relative to viewport instead of page
 Home-page: https://github.com/bouzidanas/streamlit-float
 Author: Anas Bouzid

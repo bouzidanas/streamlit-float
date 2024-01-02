@@ -9,6 +9,8 @@ float_init()
 
 if "show" not in st.session_state:
     st.session_state.show = False
+if "tutorial" not in st.session_state:
+    st.session_state.tutorial = False
 
 # Function to navigate to a new page
 # An improvement here would be to open in new tab
@@ -140,6 +142,13 @@ if menu_selection == "Contact":
         st.experimental_rerun()
     else:
         st.session_state.dialog = False
+elif menu_selection == "Tutorial":
+    st.session_state.menusel = 1
+    if not st.session_state.tutorial:
+        st.session_state.tutorial = True
+        st.experimental_rerun()
+    else:
+        st.session_state.tutorial = False
 elif menu_selection == "Video":
     st.session_state.menusel = 2
     if not st.session_state.show:
@@ -157,12 +166,12 @@ float_box('<a href="https://pypi.org/project/streamlit-float/">PYPI</a>・<a hre
 # Create a banner container
 banner_container = st.container()
 
-# Add alert banner to banner container
-with banner_container:
-    sac.alert(message='**WARNING! This is a demo. This is not a real article.**', description=None, type='warning', height=None, icon=True, closable=True, banner=True)
+# # Add alert banner to banner container
+# with banner_container:
+#     sac.alert(message='**WARNING! This is a demo. This is not a real article.**', description=None, type='warning', height=None, icon=True, closable=True, banner=True)
 
-# Float banner container
-banner_container.float("bottom: -1rem;z-index: 999992;")
+# # Float banner container
+# banner_container.float("bottom: -1rem;z-index: 999992;")
 
 # Custom styles for floating links
 # Note Float box container has "floating" class
@@ -178,3 +187,5 @@ style = '''<style>
 }
 </style>'''
 st.markdown(style, unsafe_allow_html=True)
+
+if 

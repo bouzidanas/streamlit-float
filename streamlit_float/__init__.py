@@ -33,8 +33,9 @@ shadow_list = ["box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;",
                ]
 
 transition_list = ["transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0, 1, 0.5, 1);", 
-                   "transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0.15, 0.45, 0.85, 0.55);", 
-                   "transition-property: all;transition-duration: .6s;transition-timing-function: ease-in-out;"
+                   "transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(0.2, 0.6, 0.85, 0.55);", 
+                   "transition-property: all;transition-duration: .6s;transition-timing-function: ease-in-out;",
+                   "transition-property: all;transition-duration: .5s;transition-timing-function: cubic-bezier(1.000, 0.010, 0.30, 1.000);"
                    ]
 
 def theme_init(include_unstable_primary=False):
@@ -88,6 +89,12 @@ def float_init(theme=True, include_unstable_primary=False):
 # add css to streamlit app
     html_style = '''
     <style>
+    div.element-container:has(div.float) {
+        position: absolute!important;
+    }
+    div.element-container:has(div.floating) {
+        position: absolute!important;
+    }
     div:has( >.element-container div.float) {
         display: flex;
         flex-direction: column;
@@ -111,12 +118,12 @@ def float_init(theme=True, include_unstable_primary=False):
         theme_init(include_unstable_primary=include_unstable_primary)
 
 # adds empty div to parent in order to target it with css
+# TODO: remove extra gap generated when floating containers. To do this, find the appropriate parent div and set `position: absolute` on it.
 def float_parent(css=None):
     if css is not None:
         new_id = str(uuid.uuid4())[:8]
-        new_css = '<style>\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
-        st.markdown(new_css, unsafe_allow_html=True)
-        st.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
+        new_css = '<style>\ndiv.element-container[data-testid="element-container"]:has(>div div.flt-' + new_id + '){\n  diaplay: none!important;\n}\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
+        st.markdown(new_css + '\n<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
         js_ = f'''
             <script>
                 float_el = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
@@ -134,12 +141,12 @@ def float_parent(css=None):
         st.markdown('<div class="float"></div>', unsafe_allow_html=True)
 
 # float container via its delta generator 
+# TODO: remove extra gap generated when floating containers. To do this, find the appropriate parent div and set `position: absolute` on it.
 def float(self, css=None):
     if css is not None:
         new_id = str(uuid.uuid4())[:8]
-        new_css = '<style>\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
-        st.markdown(new_css, unsafe_allow_html=True)
-        self.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
+        new_css = '<style>\ndiv.element-container[data-testid="element-container"]:has(>div div.flt-' + new_id + '){\n  position: absolute!important;\n}\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
+        self.markdown(new_css + '\n<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
         js_ = f'''
             <script>
                 float_el_delta = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
@@ -239,26 +246,52 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
 
 # Create a floating dialog container 
 # This needs to be fleshed out more. Add more options for positions, transitions, etc.
-def float_dialog(show=False, width=2, background="slategray", transition=2, css=""):
+def float_dialog(show=False, width=2, background="slategray", transition=2, transition_from="top", transition_to="center", css=""):
     float_col_a, float_col_b = st.columns([width, 1])
+
+    if transition_from == "top":
+        hidden_background_pos_css = "top: min(-100vh, -100vi);"
+        hidden_dialog_pos_css = "top: min(-100vh, -100vi);transform: translateX(-50%) translateY(-50%);"
+    elif transition_from == "bottom":
+        hidden_background_pos_css = "bottom: min(-100vh, -100vi);"
+        hidden_dialog_pos_css = "bottom: min(-100vh, -100vi);transform: translateX(-50%) translateY(50%);"
+    elif transition_from == "center":
+        hidden_background_pos_css = "top: 50%;transform: translateY(-50%) scale(0);"
+        hidden_dialog_pos_css = "top: 50%;transform: translateX(-50%) translateY(-50%) scale(0);"
+
+    if transition_to == "top":
+        visible_background_pos_css = "top: 0;"
+        visible_dialog_pos_css = "top: 2.3rem;transform: translateX(-50%);"
+    elif transition_to == "bottom":
+        visible_background_pos_css = "bottom: 0;"
+        visible_dialog_pos_css = "bottom: 2.3rem;transform: translateX(-50%);"
+    elif transition_to == "center":
+        if transition_from == "bottom":
+            visible_background_pos_css = "bottom: 50%;transform: translateY(50%) scale(1);"
+            visible_dialog_pos_css = "bottom: 50%;transform: translateX(-50%) translateY(50%) scale(1);"
+        else:
+            visible_background_pos_css = "top: 50%;transform: translateY(-50%) scale(1);"
+            visible_dialog_pos_css = "top: 50%;transform: translateX(-50%) translateY(-50%) scale(1);"
 
     with float_col_a:    
         dialog_container = st.container()
 
     if show:
-        pos_css = "top: 2.3rem;"
+        background_pos_css = visible_background_pos_css
+        dialog_pos_css = visible_dialog_pos_css
     else:
-        pos_css = "top: min(-100vh, -100vi);"
+        background_pos_css = hidden_background_pos_css
+        dialog_pos_css = hidden_dialog_pos_css
 
     if transition is not None and type(transition) is int and transition < len(transition_list) and transition >= 0:
-        tran_css = transition_list[int(transition)]
+        transition_css = transition_list[int(transition)]
     elif type(transition) is str:
-        tran_css = transition
+        transition_css = transition
     else:
-        tran_css = ""
+        transition_css = ""
 
-    float_col_b.float(float_css_helper(width="100%", height="100%", left="0", top="0", background="rgba(0, 0, 0, 0.4)", css="z-index: 999000;" + pos_css))
-    float_col_a.float(pos_css + "padding: 2rem;padding-bottom: 0.9rem;border-radius: 0.5rem;left: 50%;transform: translateX(-50%);z-index: 999900;" + tran_css + css + "transition-property: top;background-color: " + background + ";")
+    float_col_b.float(float_css_helper(width="100%", height="100%", left="0", background="rgba(0, 0, 0, 0.4)", css="z-index: 999000;" + background_pos_css))
+    float_col_a.float("padding: 2rem;padding-bottom: 0.9rem;border-radius: 0.5rem;left: 50%;z-index: 999900;" + dialog_pos_css + transition_css + css + "transition-property: top, bottom;background-color: " + background + ";")
     return dialog_container
 
 
