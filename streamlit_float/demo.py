@@ -120,6 +120,7 @@ with dialog_container:
     email_input = st.text_input("Enter your email")
     message = st.text_area("Enter your message")
     if st.button("Send", key="send"):
+        st.session_state.menusel = 0
         st.session_state.dialog = False
         st.experimental_rerun()
 
@@ -202,5 +203,5 @@ if st.session_state.tutorial:
     close_overlay_css = float_css_helper(width="2.2rem", right="4rem", bottom="2rem", z_index="999999")
     close_overlay_container.float(close_overlay_css)
 
-    float_box('<div>↑</div><div>Place Menus/Navbars in a container and float it to the top or bottom of the page</div>', width="30%", height="2rem", right="50%", top="3rem", background="transparent", css="flex-direction: column;align-items: center;color: #ffffff;font-size:1.8rem;z-index:999999;translate: 50%;")
+    float_box('<div>↑</div><div>Place Menus/Navbars in a container and float it to the top or bottom of the page</div>', width="30%", height="2rem", right="50%", top="3rem", background="transparent", css="max-width:50%;width:fit-content;flex-direction: column;align-items: center;color: #ffffff;font-size:1.8rem;z-index:999999;translate: 50%;")
     float_box('<div style="height:fit-content;">Click close button to exit tutorial </div><div>↴</div>', height="2rem", right="2.7rem", bottom="7.5rem", background="transparent", css="min-width: 25%; width:fit-content;flex-direction: row;justify-content: right;color: #ffffff;font-size:1.8rem;z-index:999999;gap:0.5rem;")
