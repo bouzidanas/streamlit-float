@@ -11,6 +11,8 @@ if "show" not in st.session_state:
     st.session_state.show = False
 if "tutorial" not in st.session_state:
     st.session_state.tutorial = False
+if "menusel" not in st.session_state:
+    st.session_state.menusel = 0
 
 # Function to navigate to a new page
 # An improvement here would be to open in new tab
@@ -99,7 +101,6 @@ button_css = float_css_helper(width="2.2rem", right="2rem", bottom=button_b_pos,
 button_container.float(button_css)
 float_box('<iframe width="100%" height="100%" src="https://www.youtube.com/embed/J8TgKxomS2g?si=Ir_bq_E5e9jHAEFw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',width="29rem", right="2rem", bottom=vid_y_pos, transition=0, shadow=12, css="padding: 0;")
 
-
 # Initialize session variable that will open/close dialog
 if "dialog" not in st.session_state:
     st.session_state.dialog = False
@@ -130,6 +131,7 @@ with menu_container:
     menu_selection = option_menu(None, ["Home", "Tutorial", "Video", 'Contact'], 
     icons=['house', 'people', 'play-btn', "chat-square-text"], 
     menu_icon="cast", default_index=0, orientation="horizontal",
+    manual_select=st.session_state.menusel,
     styles={
         "container": {"padding": "0.2rem 0", "background-color": "#22222200"},
            })
@@ -146,9 +148,6 @@ elif menu_selection == "Tutorial":
     st.session_state.menusel = 1
     if not st.session_state.tutorial:
         st.session_state.tutorial = True
-        st.experimental_rerun()
-    else:
-        st.session_state.tutorial = False
 elif menu_selection == "Video":
     st.session_state.menusel = 2
     if not st.session_state.show:
@@ -163,8 +162,11 @@ menu_container.float("top: 0.15rem;z-index: 999990;")
 # Create a floating links
 float_box('<a href="https://pypi.org/project/streamlit-float/">PYPI</a>・<a href="https://github.com/bouzidanas/streamlit-float">Github</a>・<a href="https://discuss.streamlit.io/t/anybody-interested-in-simple-component-to-float-containers/45013?u=bouzidanas">Community</a> ', width="fit-content", height="2rem", right="-5.6rem", top="12rem", background="transparent", css="flex-direction: row;align-items: center;color: #ffffff99;rotate: 90deg;")
 
-# Create a banner container
-banner_container = st.container()
+# add overlay
+float_overlay(st.session_state.tutorial, alpha=0.2, z_index="999980")
+
+# # Create a banner container
+# banner_container = st.container()
 
 # # Add alert banner to banner container
 # with banner_container:
@@ -187,3 +189,18 @@ style = '''<style>
 }
 </style>'''
 st.markdown(style, unsafe_allow_html=True)
+
+if st.session_state.tutorial:
+    close_overlay_container = st.container()
+    with close_overlay_container:
+        if st.button("Close", key="close"):
+            st.session_state.tutorial = False
+            st.session_state.menusel = 0
+            st.experimental_rerun()
+
+    # Float close button
+    close_overlay_css = float_css_helper(width="2.2rem", right="4rem", bottom="2rem", z_index="999999")
+    close_overlay_container.float(close_overlay_css)
+
+    float_box('<div>↑</div><div>Place Menus/Navbars in a container and float it to the top or bottom of the page</div>', width="30%", height="2rem", right="50%", top="3rem", background="transparent", css="flex-direction: column;align-items: center;color: #ffffff;font-size:1.8rem;z-index:999999;translate: 50%;")
+    float_box('<div style="height:fit-content;">Click close button to exit tutorial </div><div>↴</div>', height="2rem", right="2.7rem", bottom="7.5rem", background="transparent", css="min-width: 25%; width:fit-content;flex-direction: row;justify-content: right;color: #ffffff;font-size:1.8rem;z-index:999999;gap:0.5rem;")

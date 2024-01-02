@@ -246,7 +246,7 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
 
 # Create a floating dialog container 
 # This needs to be fleshed out more. Add more options for positions, transitions, etc.
-def float_dialog(show=False, width=2, background="slategray", transition=2, transition_from="bottom", transition_to="center", css=""):
+def float_dialog(show=False, width=2, background="slategray", transition=2, transition_from="top", transition_to="center", css=""):
     float_col_a, float_col_b = st.columns([width, 1])
 
     if transition_from == "top":
@@ -295,7 +295,7 @@ def float_dialog(show=False, width=2, background="slategray", transition=2, tran
     return dialog_container
 
 
-def float_overlay(show=False, z_index="999989", color="#000000", alpha=0.0, blur="1rem", filter=None):
+def float_overlay(show=False, z_index="999999", color="#000000", alpha=0.0, blur="1rem", filter=None):
     if color.startswith("#"):
         color += ("0%x" % int(255*alpha))[-2:]
     elif color.startswith("rgb"):
