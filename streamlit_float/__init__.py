@@ -246,7 +246,7 @@ def float_css_helper(width=None, height=None, top=None, left=None, right=None, b
 
 # Create a floating dialog container 
 # This needs to be fleshed out more. Add more options for positions, transitions, etc.
-def float_dialog(show=False, width=2, background="slategray", transition=2, transition_from="top", transition_to="center", css=""):
+def float_dialog(show=False, width=2, background="slategray", transition=2, transition_from="bottom", transition_to="center", css=""):
     float_col_a, float_col_b = st.columns([width, 1])
 
     if transition_from == "top":
@@ -260,10 +260,10 @@ def float_dialog(show=False, width=2, background="slategray", transition=2, tran
         hidden_dialog_pos_css = "top: 50%;transform: translateX(-50%) translateY(-50%) scale(0);"
 
     if transition_to == "top":
-        visible_background_pos_css = "top: 0;"
+        visible_background_pos_css = "top: 2.3rem;"
         visible_dialog_pos_css = "top: 2.3rem;transform: translateX(-50%);"
     elif transition_to == "bottom":
-        visible_background_pos_css = "bottom: 0;"
+        visible_background_pos_css = "bottom: -2.3rem;"
         visible_dialog_pos_css = "bottom: 2.3rem;transform: translateX(-50%);"
     elif transition_to == "center":
         if transition_from == "bottom":
