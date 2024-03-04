@@ -142,7 +142,7 @@ def float_parent(css=None):
 
 # float container via its delta generator 
 # TODO: remove extra gap generated when floating containers. To do this, find the appropriate parent div and set `position: absolute` on it.
-def float(self, css=None):
+def sf_float(self, css=None):
     if css is not None:
         new_id = str(uuid.uuid4())[:8]
         new_css = '<style>\ndiv.element-container[data-testid="element-container"]:has(>div div.flt-' + new_id + '){\n  position: absolute!important;\n}\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
@@ -164,7 +164,7 @@ def float(self, css=None):
         self.markdown('<div class="float"></div>', unsafe_allow_html=True)
 
 # add float method to st.delta_generator.DeltaGenerator class so it can be directly called
-st.delta_generator.DeltaGenerator.float = float
+st.delta_generator.DeltaGenerator.float = sf_float
 
 # create a floating box containing markdown content
 def float_box(markdown, width="300px", height="300px", top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, z_index=None, sticky=False, css=None):
