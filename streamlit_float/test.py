@@ -54,3 +54,5 @@ with col3:
 
 test_css = float_css_helper(css={"color": "red", "font-size": "2rem"}, background_color="blue")
 st.write(test_css)
+
+st.write(dir())
