@@ -10,6 +10,9 @@ from dotenv import load_dotenv, find_dotenv
 from datetime import datetime
 from streamlit_float import *
 
+st.set_page_config(page_title="Streamlit Chat Interface Improvement",
+                   page_icon="🤩")
+
 # initialize float feature/capability
 float_init()
 
@@ -19,8 +22,6 @@ from openai import OpenAI  # 1.30.1
 logger = logging.getLogger()
 logging.basicConfig(encoding="UTF-8", level=logging.INFO)
 
-# st.set_page_config(page_title="Streamlit Chat Interface Improvement",
-#                    page_icon="🤩")
 
 st.title("🤩 Improved Streamlit Chat UI")
 
