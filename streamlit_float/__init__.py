@@ -137,8 +137,10 @@ def float_parent(css=None):
             </script>
             '''
         st.components.v1.html(js_)
+        return 'div:has( >.element-container div.flt-' + new_id + ')'
     else:
         st.markdown('<div class="float"></div>', unsafe_allow_html=True)
+        return 'div:has( >.element-container div.float)'
 
 # float container via its delta generator 
 # TODO: remove extra gap generated when floating containers. To do this, find the appropriate parent div and set `position: absolute` on it.
@@ -160,8 +162,10 @@ def sf_float(self, css=None):
             </script>
             '''
         st.components.v1.html(js_)
+        return 'div:has( >.element-container div.flt-' + new_id + ')'
     else:
         self.markdown('<div class="float"></div>', unsafe_allow_html=True)
+        return 'div:has( >.element-container div.float)'
 
 # add float method to st.delta_generator.DeltaGenerator class so it can be directly called
 st.delta_generator.DeltaGenerator.float = sf_float
@@ -200,6 +204,7 @@ def float_box(markdown, width="300px", height="300px", top=None, left=None, righ
     new_css = '<style>\ndiv.flt-' + new_id + ' {' + jct_css + '}\n</style>'
     st.markdown(new_css, unsafe_allow_html=True)
     st.markdown('<div class="floating flt-' + new_id + '">' + markdown + '</div>', unsafe_allow_html=True)
+    return 'div:has( >.element-container div.flt-' + new_id + ')'
 
 # helper function to create css string
 def float_css_helper(width=None, height=None, top=None, left=None, right=None, bottom=None, background=None, border=None, shadow=None, transition=None, z_index=None, sticky=False, css="", **kwargs):
