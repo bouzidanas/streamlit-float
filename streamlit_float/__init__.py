@@ -95,21 +95,13 @@ def float_init(theme=True, include_unstable_primary=False):
     div.element-container:has(div.floating) {
         position: absolute!important;
     }
-    div:has( >.element-container div.float) {
-        display: flex;
-        flex-direction: column;
+    div:has( >.element-container div.float), div.floating {
         position: fixed;
         z-index: 99;
     }
     div.float, div.elim {
         display: none;
         height:0%;
-    }
-    div.floating {
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        z-index: 99; 
     }
     </style>
     '''
