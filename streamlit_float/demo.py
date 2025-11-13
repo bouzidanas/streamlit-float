@@ -82,11 +82,11 @@ with button_container:
     if st.session_state.show:
         if st.button("⭳", type="primary"):
             st.session_state.show = False
-            st.experimental_rerun()
+            st.rerun()
     else:
         if st.button("⭱", type="secondary"):
             st.session_state.show = True
-            st.experimental_rerun()
+            st.rerun()
     
 # Alter CSS based on expand/collapse state
 if st.session_state.show:
@@ -108,7 +108,7 @@ if "dialog" not in st.session_state:
 # Button that opens the dialog
 if st.button("Contact us"):
     st.session_state.dialog = True
-    st.experimental_rerun()
+    st.rerun()
 
 # Create Float Dialog container
 dialog_container = float_dialog(st.session_state.dialog, background="var(--default-backgroundColor)")
@@ -122,7 +122,7 @@ with dialog_container:
     if st.button("Send", key="send"):
         st.session_state.menusel = 0
         st.session_state.dialog = False
-        st.experimental_rerun()
+        st.rerun()
 
 # Create a menu container
 menu_container = st.container()
@@ -142,7 +142,7 @@ if menu_selection == "Contact":
     st.session_state.menusel = 3
     if not st.session_state.dialog:
         st.session_state.dialog = True
-        st.experimental_rerun()
+        st.rerun()
     else:
         st.session_state.dialog = False
 elif menu_selection == "Tutorial":
@@ -153,7 +153,7 @@ elif menu_selection == "Video":
     st.session_state.menusel = 2
     if not st.session_state.show:
         st.session_state.show = True
-        st.experimental_rerun()    
+        st.rerun()    
 elif menu_selection == "Home":
     st.session_state.menusel = 0
 
@@ -197,7 +197,7 @@ if st.session_state.tutorial:
         if st.button("Close", key="close"):
             st.session_state.tutorial = False
             st.session_state.menusel = 0
-            st.experimental_rerun()
+            st.rerun()
 
     # Float close button
     close_overlay_css = float_css_helper(width="2.2rem", right="4rem", bottom="2rem", z_index="999999")

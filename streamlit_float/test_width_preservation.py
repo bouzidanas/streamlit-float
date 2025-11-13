@@ -14,17 +14,16 @@ with col1:
     st.write("This is column 1 - it should be 66.67% width minus some margin")
     st.write("This container should maintain its original width when floated")
     st.button("Button in floated container")
+    st.write("This container uses direct .float() method")
+    st.slider("Slider in floated container", 0, 100, 50)
 
 with col2:
     st.write("This is column 2 - it should be 33.33% width")
 
 # Test with direct float method
-my_cont = st.container()
-with my_cont:
-    st.write("This container uses direct .float() method")
-    st.slider("Slider in floated container", 0, 100, 50)
 
-my_cont.float()
+
+
 
 st.write("---")
 st.write("The floated containers above should maintain their original calculated widths, not expand to full screen width.")

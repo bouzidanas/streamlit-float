@@ -98,6 +98,7 @@ def float_init(theme=True, include_unstable_primary=False):
     div:has( >.element-container div.float), div.floating {
         position: fixed;
         z-index: 99;
+        height: auto;
     }
     div.float, div.elim {
         display: none;
@@ -120,8 +121,17 @@ def float_parent(css=None):
             <script>
                 float_el = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
                 float_el_parent_two_levels_up = float_el[0].closest("div > .element-container ").parentNode
+                
+                // Capture width from parent before applying positioning
+                const grandParent = float_el_parent_two_levels_up.parentNode;
+                if (grandParent) {{
+                    const computedStyle = window.getComputedStyle(grandParent);
+                    const parentWidth = computedStyle.width;
+                    float_el_parent_two_levels_up.style.width = parentWidth;
+                }}
+                
                 float_el_parent_two_levels_up.id = "float-this-component-{new_id}"
-                float_el_parent_two_levels_up.style = '{css}'
+                float_el_parent_two_levels_up.style.cssText += '; {css}'
                 new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
                 new_float_id_el.style = 'display:none;'
                 float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
@@ -131,8 +141,24 @@ def float_parent(css=None):
         st.components.v1.html(js_)
         return 'div:has( >.element-container div.flt-' + new_id + ')'
     else:
-        st.markdown('<div class="float"></div>', unsafe_allow_html=True)
-        return 'div:has( >.element-container div.float)'
+        new_id = str(uuid.uuid4())[:8]
+        st.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
+        js_ = f'''
+            <script>
+                float_el = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
+                float_el_parent_two_levels_up = float_el[0].closest("div > .element-container ").parentNode
+                
+                // Capture width from parent before CSS positioning takes effect
+                const grandParent = float_el_parent_two_levels_up.parentNode;
+                if (grandParent) {{
+                    const computedStyle = window.getComputedStyle(grandParent);
+                    const parentWidth = computedStyle.width;
+                    float_el_parent_two_levels_up.style.width = parentWidth;
+                }}
+            </script>
+            '''
+        st.components.v1.html(js_)
+        return 'div:has( >.element-container div.flt-' + new_id + ')'
 
 # float container via its delta generator 
 # TODO: remove extra gap generated when floating containers. To do this, find the appropriate parent div and set `position: absolute` on it.
@@ -145,8 +171,17 @@ def sf_float(self, css=None):
             <script>
                 float_el_delta = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
                 float_el_parent_two_levels_up = float_el_delta[0].closest("div > .element-container ").parentNode
+                
+                // Capture width from parent before applying positioning
+                const grandParent = float_el_parent_two_levels_up.parentNode;
+                if (grandParent) {{
+                    const computedStyle = window.getComputedStyle(grandParent);
+                    const parentWidth = computedStyle.width;
+                    float_el_parent_two_levels_up.style.width = parentWidth;
+                }}
+                
                 float_el_parent_two_levels_up.id = "float-this-component-{new_id}"
-                float_el_parent_two_levels_up.style = 'display:flex; flex-direction:column; position:fixed; z-index:99; {css}'
+                float_el_parent_two_levels_up.style.cssText += '; position:fixed; z-index:99; {css}'
                 new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
                 new_float_id_el.style = 'display:none;'
                 float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
@@ -156,8 +191,24 @@ def sf_float(self, css=None):
         st.components.v1.html(js_)
         return 'div:has( >.element-container div.flt-' + new_id + ')'
     else:
-        self.markdown('<div class="float"></div>', unsafe_allow_html=True)
-        return 'div:has( >.element-container div.float)'
+        new_id = str(uuid.uuid4())[:8]
+        self.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
+        js_ = f'''
+            <script>
+                float_el_delta = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
+                float_el_parent_two_levels_up = float_el_delta[0].closest("div > .element-container ").parentNode
+                
+                // Capture width from parent before CSS positioning takes effect
+                const grandParent = float_el_parent_two_levels_up.parentNode;
+                if (grandParent) {{
+                    const computedStyle = window.getComputedStyle(grandParent);
+                    const parentWidth = computedStyle.width;
+                    float_el_parent_two_levels_up.style.width = parentWidth;
+                }}
+            </script>
+            '''
+        st.components.v1.html(js_)
+        return 'div:has( >.element-container div.flt-' + new_id + ')'
 
 # add float method to st.delta_generator.DeltaGenerator class so it can be directly called
 st.delta_generator.DeltaGenerator.float = sf_float
