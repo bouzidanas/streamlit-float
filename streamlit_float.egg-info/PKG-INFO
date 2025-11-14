@@ -1,15 +1,22 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.2
 Name: streamlit-float
-Version: 0.3.5
+Version: 0.4.0
 Summary: Fix Streamlit containers relative to viewport instead of page
 Home-page: https://github.com/bouzidanas/streamlit-float
 Author: Anas Bouzid
 Author-email: anasbouzid@gmail.com
-License: UNKNOWN
-Platform: UNKNOWN
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE.txt
+Requires-Dist: streamlit>=1.45
+Dynamic: author
+Dynamic: author-email
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 streamlit-float [![PyPi - Downloads](https://img.shields.io/pypi/dm/streamlit-float)](https://pypi.org/project/streamlit-float/#files)
 ============
@@ -81,4 +88,3 @@ st.markdown('''<div class="floating">..content..</div>''', unsafe_allow_html=Tru
 
 ## License
 This project is licensed under the [MIT License](LICENSE.txt)
-

@@ -4,6 +4,8 @@ setup.py
 streamlit_float/__init__.py
 streamlit_float/demo.py
 streamlit_float/test.py
+streamlit_float/test_docs.py
+streamlit_float/test_width_preservation.py
 streamlit_float.egg-info/PKG-INFO
 streamlit_float.egg-info/SOURCES.txt
 streamlit_float.egg-info/dependency_links.txt

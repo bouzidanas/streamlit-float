@@ -6,7 +6,7 @@ long_description = (this_directory / "PROJECT.md").read_text()
 
 setup(
     name='streamlit-float',
-    version='0.3.5',
+    version='0.4.0',
     author='Anas Bouzid',
     author_email='anasbouzid@gmail.com',
     description='Fix Streamlit containers relative to viewport instead of page',
@@ -21,6 +21,6 @@ setup(
         # By definition, a Custom Component depends on Streamlit.
         # If your component has other Python dependencies, list
         # them here.
-        "streamlit >= 0.63",
+        "streamlit >= 1.45",
     ],
 )
