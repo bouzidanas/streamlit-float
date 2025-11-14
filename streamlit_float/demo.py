@@ -25,7 +25,10 @@ def nav_to(url):
 with st.sidebar:
     st.markdown("# streamlit-float")
 
-st.image("https://github.com/bouzidanas/streamlit-float/assets/25779130/6543e315-3e42-4f11-b4a5-939853f2a048")
+img_container = st.container()
+with img_container:
+    st.image("https://github.com/bouzidanas/streamlit-float/assets/25779130/6543e315-3e42-4f11-b4a5-939853f2a048")
+    
 st.markdown('''# Large Language Models
 
 Large language models, such as GPT-3 and BERT, have revolutionized natural language processing. These models are trained on massive amounts of text data and can generate human-like text, answer questions, and perform various language-related tasks. They have been used in a wide range of applications, including chatbots, language translation, and content generation. The advancements in large language models have opened up new possibilities for improving communication and understanding between humans and machines.

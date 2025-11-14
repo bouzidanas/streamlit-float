@@ -113,102 +113,142 @@ def float_init(theme=True, include_unstable_primary=False):
 # adds empty div to parent in order to target it with css
 # TODO: remove extra gap generated when floating containers. To do this, find the appropriate parent div and set `position: absolute` on it.
 def float_parent(css=None):
+    new_id = str(uuid.uuid4())[:8]
+    new_css = ''
     if css is not None:
-        new_id = str(uuid.uuid4())[:8]
         new_css = '<style>\ndiv.element-container[data-testid="element-container"]:has(>div div.flt-' + new_id + '){\n  diaplay: none!important;\n}\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
-        st.markdown(new_css + '\n<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
-        js_ = f'''
-            <script>
-                float_el = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
-                float_el_parent_two_levels_up = float_el[0].closest("div > .element-container ").parentNode
+    
+    st.markdown(new_css + '\n<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
+    
+    js_ = f'''
+        <script>
+            float_el = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
+            const elementContainer = float_el[0].closest("div.element-container");
+            
+            if (elementContainer) {{
+                const float_el_parent = elementContainer.parentNode;
                 
-                // Capture width from parent before applying positioning
-                const grandParent = float_el_parent_two_levels_up.parentNode;
-                if (grandParent) {{
-                    const computedStyle = window.getComputedStyle(grandParent);
-                    const parentWidth = computedStyle.width;
-                    float_el_parent_two_levels_up.style.width = parentWidth;
+                // Check if the parent has specific classes that indicate we should target element-container instead
+                if (float_el_parent && float_el_parent.classList && 
+                    float_el_parent.classList.contains('stMainBlockContainer') && 
+                    float_el_parent.classList.contains('block-container')) {{
+                    
+                    // Capture width from parent before applying positioning
+                    if (float_el_parent) {{
+                        const computedStyle = window.getComputedStyle(float_el_parent);
+                        const parentWidth = computedStyle.width;
+                        elementContainer.style.width = parentWidth;
+                    }}
+                    
+                    {f'elementContainer.id = "float-this-component-{new_id}";' if css else ''}
+                    
+                    // Apply CSS to element-container itself
+                    elementContainer.style.cssText += '; position: fixed; z-index: 99; height: auto;{"; " + css if css else ""}';
+                }} else {{
+                    // Capture width from parent before applying positioning
+                    const grandParent = float_el_parent.parentNode;
+                    if (grandParent) {{
+                        const computedStyle = window.getComputedStyle(grandParent);
+                        const parentWidth = computedStyle.width;
+                        float_el_parent.style.width = parentWidth;
+                    }}
+                    
+                    {f'float_el_parent.id = "float-this-component-{new_id}";' if css else ''}
+                    
+                    // Apply CSS to parent of element-container
+                    float_el_parent.style.cssText += '; position: fixed; z-index: 99; height: auto;{"; " + css if css else ""}';
                 }}
                 
-                float_el_parent_two_levels_up.id = "float-this-component-{new_id}"
-                float_el_parent_two_levels_up.style.cssText += '; {css}'
-                new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
-                new_float_id_el.style = 'display:none;'
-                float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
-                float_el_hide.style = 'display:none;'
-            </script>
-            '''
-        st.components.v1.html(js_)
-        return 'div:has( >.element-container div.flt-' + new_id + ')'
-    else:
-        new_id = str(uuid.uuid4())[:8]
-        st.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
-        js_ = f'''
-            <script>
-                float_el = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
-                float_el_parent_two_levels_up = float_el[0].closest("div > .element-container ").parentNode
-                
-                // Capture width from parent before CSS positioning takes effect
-                const grandParent = float_el_parent_two_levels_up.parentNode;
-                if (grandParent) {{
-                    const computedStyle = window.getComputedStyle(grandParent);
-                    const parentWidth = computedStyle.width;
-                    float_el_parent_two_levels_up.style.width = parentWidth;
+                // Always apply absolute positioning to element-container
+                elementContainer.style.cssText += '; position: absolute!important;';
+            }}
+            float_el[0].style.cssText += '; display: none; height: 0%;';
+            
+            new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
+            new_float_id_el.style = 'display:none;'
+            float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
+            float_el_hide.style = 'display:none;'
+            
+            // Hide any element container that contains CSS for this floating element
+            parent.document.querySelectorAll('.element-container > .stMarkdown > div > style').forEach(style => {{
+                if (style.textContent.includes('flt-{new_id}')) {{
+                    style.closest('.element-container').style.display = 'none';
                 }}
-            </script>
-            '''
-        st.components.v1.html(js_)
-        return 'div:has( >.element-container div.flt-' + new_id + ')'
+            }});
+        </script>
+        '''
+    st.components.v1.html(js_)
+    return 'div:has( >.element-container div.flt-' + new_id + ')'
 
 # float container via its delta generator 
 # TODO: remove extra gap generated when floating containers. To do this, find the appropriate parent div and set `position: absolute` on it.
 def sf_float(self, css=None):
+    new_id = str(uuid.uuid4())[:8]
+    new_css = ''
     if css is not None:
-        new_id = str(uuid.uuid4())[:8]
         new_css = '<style>\ndiv.element-container[data-testid="element-container"]:has(>div div.flt-' + new_id + '){\n  position: absolute!important;\n}\ndiv:has( >.element-container div.flt-' + new_id + ') {' + css + '}\n</style>'
-        self.markdown(new_css + '\n<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
-        js_ = f'''
-            <script>
-                float_el_delta = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
-                float_el_parent_two_levels_up = float_el_delta[0].closest("div > .element-container ").parentNode
+    
+    self.markdown(new_css + '\n<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
+    
+    js_ = f'''
+        <script>
+            float_el_delta = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
+            const elementContainer = float_el_delta[0].closest("div.element-container");
+            
+            if (elementContainer) {{
+                const float_el_parent = elementContainer.parentNode;
                 
-                // Capture width from parent before applying positioning
-                const grandParent = float_el_parent_two_levels_up.parentNode;
-                if (grandParent) {{
-                    const computedStyle = window.getComputedStyle(grandParent);
-                    const parentWidth = computedStyle.width;
-                    float_el_parent_two_levels_up.style.width = parentWidth;
+                // Check if the parent has specific classes that indicate we should target element-container instead
+                if (float_el_parent && float_el_parent.classList && 
+                    float_el_parent.classList.contains('stMainBlockContainer') && 
+                    float_el_parent.classList.contains('block-container')) {{
+                    
+                    // Capture width from parent before applying positioning
+                    if (float_el_parent) {{
+                        const computedStyle = window.getComputedStyle(float_el_parent);
+                        const parentWidth = computedStyle.width;
+                        elementContainer.style.width = parentWidth;
+                    }}
+                    
+                    {f'elementContainer.id = "float-this-component-{new_id}";' if css else ''}
+                    
+                    // Apply CSS to element-container itself
+                    elementContainer.style.cssText += '; position: fixed; z-index: 99; height: auto;{"; " + css if css else ""}';
+                }} else {{
+                    // Capture width from parent before applying positioning
+                    const grandParent = float_el_parent.parentNode;
+                    if (grandParent) {{
+                        const computedStyle = window.getComputedStyle(grandParent);
+                        const parentWidth = computedStyle.width;
+                        float_el_parent.style.width = parentWidth;
+                    }}
+                    
+                    {f'float_el_parent.id = "float-this-component-{new_id}";' if css else ''}
+                    
+                    // Apply CSS to parent of element-container
+                    float_el_parent.style.cssText += '; position: fixed; z-index: 99; height: auto;{"; " + css if css else ""}';
                 }}
                 
-                float_el_parent_two_levels_up.id = "float-this-component-{new_id}"
-                float_el_parent_two_levels_up.style.cssText += '; position:fixed; z-index:99; {css}'
-                new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
-                new_float_id_el.style = 'display:none;'
-                float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
-                float_el_hide.style = 'display:none;'
-            </script>
-            '''
-        st.components.v1.html(js_)
-        return 'div:has( >.element-container div.flt-' + new_id + ')'
-    else:
-        new_id = str(uuid.uuid4())[:8]
-        self.markdown('<div class="float flt-' + new_id + '"></div>', unsafe_allow_html=True)
-        js_ = f'''
-            <script>
-                float_el_delta = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')
-                float_el_parent_two_levels_up = float_el_delta[0].closest("div > .element-container ").parentNode
-                
-                // Capture width from parent before CSS positioning takes effect
-                const grandParent = float_el_parent_two_levels_up.parentNode;
-                if (grandParent) {{
-                    const computedStyle = window.getComputedStyle(grandParent);
-                    const parentWidth = computedStyle.width;
-                    float_el_parent_two_levels_up.style.width = parentWidth;
+                // Always apply absolute positioning to element-container
+                elementContainer.style.cssText += '; position: absolute!important;';
+            }}
+            float_el_delta[0].style.cssText += '; display: none; height: 0%;';
+            
+            new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
+            new_float_id_el.style = 'display:none;'
+            float_el_hide = parent.document.querySelectorAll('div[class="float flt-{new_id}"]')[0].closest("div > .element-container ")
+            float_el_hide.style = 'display:none;'
+            
+            // Hide any element container that contains CSS for this floating element
+            parent.document.querySelectorAll('.element-container > .stMarkdown > div > style').forEach(style => {{
+                if (style.textContent.includes('flt-{new_id}')) {{
+                    style.closest('.element-container').style.display = 'none';
                 }}
-            </script>
-            '''
-        st.components.v1.html(js_)
-        return 'div:has( >.element-container div.flt-' + new_id + ')'
+            }});
+        </script>
+        '''
+    st.components.v1.html(js_)
+    return 'div:has( >.element-container div.flt-' + new_id + ')'
 
 # add float method to st.delta_generator.DeltaGenerator class so it can be directly called
 st.delta_generator.DeltaGenerator.float = sf_float
@@ -247,6 +287,39 @@ def float_box(markdown, width="300px", height="300px", top=None, left=None, righ
     new_css = '<style>\ndiv.flt-' + new_id + ' {' + jct_css + '}\n</style>'
     st.markdown(new_css, unsafe_allow_html=True)
     st.markdown('<div class="floating flt-' + new_id + '">' + markdown + '</div>', unsafe_allow_html=True)
+    
+    # Check if custom positioning was provided (position property in any form)
+    has_custom_position = sticky or ('position' in jct_css.lower())
+    
+    # Apply CSS to specific element containers for this floating element
+    js_ = f'''
+        <script>
+            const floatingEl = parent.document.querySelectorAll('div.floating.flt-{new_id}')[0];
+            if (floatingEl) {{
+                const elementContainer = floatingEl.closest("div.element-container");
+                if (elementContainer) {{
+                    // Apply absolute positioning to element-container
+                    elementContainer.style.cssText += '; position: absolute!important;';
+                }}
+                
+                // Apply fixed positioning to the floating element itself (matching CSS: div.floating)
+                floatingEl.style.cssText += '; position: fixed; z-index: 99; height: auto; {jct_css}';
+            }}
+            
+            new_float_id_el = parent.document.querySelectorAll('iframe[srcdoc*="{new_id}"]')[0].parentNode
+            new_float_id_el.style = 'display:none;'
+            
+            // Hide any element container that contains CSS for this floating element
+            setTimeout(() => {{
+                parent.document.querySelectorAll('.element-container > .stMarkdown > div > style').forEach(style => {{
+                    if (style.textContent.includes('flt-{new_id}')) {{
+                        style.closest('.element-container').style.display = 'none';
+                    }}
+                }});
+            }}, 10);
+        </script>
+    '''
+    st.components.v1.html(js_)
     return 'div:has( >.element-container div.flt-' + new_id + ')'
 
 # helper function to create css string
