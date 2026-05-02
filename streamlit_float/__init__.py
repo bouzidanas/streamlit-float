@@ -1,6 +1,9 @@
 import streamlit as st
 import uuid
-import streamlit.components.v1 as components
+
+# wrap script in html/body so st.iframe's srcdoc has a document.body for streamlit's frame init to observe
+def _iframe_script(script_html):
+    return "<!doctype html><html><body>" + script_html + "</body></html>"
 
 # list containing various types of box-shadow implementations (source: https://getcssscan.com/css-box-shadow-examples)
 shadow_list = ["box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;", 
@@ -59,7 +62,7 @@ def theme_init(include_unstable_primary=False):
     prev.style.setProperty('display', 'none');
 </script>"""
 
-    components.html("""
+    st.iframe(_iframe_script("""
 <script>
     root = window.parent.document;
     body = root.body;
@@ -73,14 +76,14 @@ def theme_init(include_unstable_primary=False):
     styleObj.setProperty('--default-backgroundColor', bgColor);
     styleObj.setProperty('--default-textColor', color);
     styleObj.setProperty('--default-font', font);
-                        
+
     cont = window.parent.document.getElementById("elim").parentElement;
     while (!cont.classList.contains("element-container")){
-        cont = cont.parentElement;            
+        cont = cont.parentElement;
     }
-""" + javascript_end, 
-            height=0, 
-            width=0)
+""" + javascript_end),
+            height="content",
+            width="content")
     if include_unstable_primary:
         st.button("", type="primary")
     st.markdown("<div id='elim'></div>", unsafe_allow_html=True)
@@ -177,7 +180,7 @@ def float_parent(css=None):
             }});
         </script>
         '''
-    st.components.v1.html(js_)
+    st.iframe(_iframe_script(js_))
     return 'div:has( >.element-container div.flt-' + new_id + ')'
 
 # float container via its delta generator 
@@ -247,7 +250,7 @@ def sf_float(self, css=None):
             }});
         </script>
         '''
-    st.components.v1.html(js_)
+    st.iframe(_iframe_script(js_))
     return 'div:has( >.element-container div.flt-' + new_id + ')'
 
 # add float method to st.delta_generator.DeltaGenerator class so it can be directly called
@@ -319,7 +322,7 @@ def float_box(markdown, width="300px", height="300px", top=None, left=None, righ
             }}, 10);
         </script>
     '''
-    st.components.v1.html(js_)
+    st.iframe(_iframe_script(js_))
     return 'div:has( >.element-container div.flt-' + new_id + ')'
 
 # helper function to create css string
